@@ -19,12 +19,12 @@ echo "Antes de iniciar edite as variáveis abaixo no arquivo migracao-dspace/doc
 
       No arquivo variaveis-para-atualizacao.properties, edite todas variáveis "
 
-#read -p "Todos os arquivos estão devidamente editados?" -n 1 -r
-#echo    # (optional) move to a new line
-#if [[ ! $REPLY =~ ^[Yy]$ ]]
-#then
-#    exit 1
-#fi
+read -p "Todos os arquivos estão devidamente editados?" -n 1 -r
+echo    
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    exit 1
+fi
 
 
 
@@ -40,23 +40,23 @@ echo "Generating DSpace dump"
 
 docker run postgres:12 pg_dump --dbname=${POSTGRES_URL_WITHUSERNAME_AND_PASSWORD}  > ./dockerfiles/docker/postgres/dump.sql
 
-###
-#read -p "O último comando ocorreu com sucesso? " -n 1 -r
-#echo    # (optional) move to a new line
-#if [[ ! $REPLY =~ ^[Yy]$ ]]
-#then
-#    exit 1
-#fi
+##
+read -p "O último comando ocorreu com sucesso? " -n 1 -r
+echo    
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    exit 1
+fi
 
 docker-compose -f dockerfiles/docker-compose-postgres-only.yml up --build -d
 
-##
-#read -p "O último comando ocorreu com sucesso? " -n 1 -r
-#echo    # (optional) move to a new line
-#if [[ ! $REPLY =~ ^[Yy]$ ]]
-#then
-#    exit 1
-#fi
+#
+read -p "O último comando ocorreu com sucesso? " -n 1 -r
+echo    
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    exit 1
+fi
 
 ##########
 ## Diretório de instalação
@@ -66,13 +66,13 @@ echo "Copying DSpace DIR files (config and assetstore)"
 cp -r $DSPACE_INSTALL_DIR/config dspace-install-dir
 ln -s $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
 
-##
-#read -p "O último comando ocorreu com sucesso? " -n 1 -r
-#echo    # (optional) move to a new line
-#if [[ ! $REPLY =~ ^[Yy]$ ]]
-#then
-#    exit 1
-#fi
+#
+read -p "O último comando ocorreu com sucesso? " -n 1 -r
+echo    
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    exit 1
+fi
 
 #########
 # Backend
@@ -81,9 +81,9 @@ ln -s $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
 echo "Downloading DSpace versions"
 #wget https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.5.zip
 
-#unzip dspace-7.5.zip
-#rm dspace-7.5.zip
-#mv DSpace-dspace-7.5 source
+unzip dspace-7.5.zip
+rm dspace-7.5.zip
+mv DSpace-dspace-7.5 source
 
 cp ./dockerfiles/Dockerfile_backend source/DSpace-dspace-7.5/Dockerfile
 cp ./dockerfiles/docker-compose_migration.yml source/DSpace-dspace-7.5/
@@ -95,29 +95,29 @@ echo "Setting up DSpace backend"
 
 docker-compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
-##
-#read -p "O último comando ocorreu com sucesso? " -n 1 -r
-#echo    # (optional) move to a new line
-#if [[ ! $REPLY =~ ^[Yy]$ ]]
-#then
-#    exit 1
-#fi
 
-#wget https://github.com/DSpace/dspace-angular/archive/refs/tags/dspace-7.5.zip
-#unzip dspace-7.5.zip
-#rm dspace-7.5.zip
-#mv dspace-angular-dspace-7.5 source
-#rm -rf dspace-7.5
+read -p "O último comando ocorreu com sucesso? " -n 1 -r
+echo    
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    exit 1
+fi
+
+wget https://github.com/DSpace/dspace-angular/archive/refs/tags/dspace-7.5.zip
+unzip dspace-7.5.zip
+rm dspace-7.5.zip
+mv dspace-angular-dspace-7.5 source
+rm -rf dspace-7.5
 cp ./dockerfiles/Dockerfile_frontend source/dspace-angular-dspace-7.5/Dockerfile
 cp ./dockerfiles/docker-compose_frontend.yml source/dspace-angular-dspace-7.5/docker/docker-compose.yml
 
-##
-#read -p "O último comando ocorreu com sucesso? " -n 1 -r
-#echo    # (optional) move to a new line
-#if [[ ! $REPLY =~ ^[Yy]$ ]]
-#then
-#    exit 1
-#fi
+#
+read -p "O último comando ocorreu com sucesso? " -n 1 -r
+echo    
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+    exit 1
+fi
 
 echo "Setting up DSpace angular"
 docker-compose -f source/dspace-angular-dspace-7.5/docker/docker-compose.yml up --build -d
