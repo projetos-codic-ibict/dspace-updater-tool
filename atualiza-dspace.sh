@@ -64,6 +64,7 @@ fi
 
 echo "Copying DSpace DIR files (config and assetstore)"
 cp -r $DSPACE_INSTALL_DIR/config dspace-install-dir
+cp -r $DSPACE_INSTALL_DIR/solr dspace-install-dir
 ln -s $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
 
 #
