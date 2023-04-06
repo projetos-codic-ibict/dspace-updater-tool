@@ -79,7 +79,7 @@ fi
 #########
 
 echo "Downloading DSpace versions"
-#wget https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.5.zip
+wget https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.5.zip
 
 unzip dspace-7.5.zip
 rm dspace-7.5.zip
