@@ -40,6 +40,7 @@ docker rm -f dspacesolr
 
 echo "" > source/DSpace-dspace-7.5/dspace/config/local.cfg
 cat ./local.cfg > source/DSpace-dspace-7.5/dspace/config/local.cfg
+echo "db.password = ${DSPACE_POSTGRES_PASSWORD}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "db.url = jdbc:postgresql://bd_dspace7:5432/dspace" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
