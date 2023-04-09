@@ -6,7 +6,7 @@ services:
 
   dspacedb:
     build:
-      context: docker/postgres
+      context: ../../dockerfiles/docker/postgres
       dockerfile: Dockerfile
     image:
       ibict/postgresdspace7
@@ -22,7 +22,6 @@ services:
     container_name: dspace
     environment:
       dspace__P__dir: /dspace
-      db__P__url: 'jdbc:postgresql://host.docker.internal:5006/dspace'
       solr__P__server: http://dspacesolr:8983/solr
       proxies__P__trusted__P__ipranges: '172.23.0'
     build:

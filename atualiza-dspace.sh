@@ -18,14 +18,6 @@ cp -r $DSPACE_INSTALL_DIR/config dspace-install-dir
 cp -r $DSPACE_INSTALL_DIR/solr dspace-install-dir
 ln -s $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
 
-#
-read -p "O último comando ocorreu com sucesso? " -n 1 -r
-echo    
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    exit 1
-fi
-
 #########
 # Backend
 #########
@@ -54,15 +46,11 @@ echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_POR
 
 echo "Setting up DSpace backend"
 
+docker rm -f dspace
+docker rmi -f dspace-dspace-75_dspace
+
 docker-compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
-
-read -p "O último comando ocorreu com sucesso? " -n 1 -r
-echo    
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    exit 1
-fi
 
 wget https://github.com/DSpace/dspace-angular/archive/refs/tags/dspace-7.5.zip
 unzip dspace-7.5.zip
@@ -93,6 +81,8 @@ docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
 
 cp ./dockerfiles/docker-compose_frontend.yml source/dspace-angular-dspace-7.5/docker/docker-compose.yml
 
+docker rm -f dspace-angular
+docker rmi -f docker_dspace-angular
 
 echo "Setting up DSpace angular"
 docker-compose -f source/dspace-angular-dspace-7.5/docker/docker-compose.yml up --build -d
