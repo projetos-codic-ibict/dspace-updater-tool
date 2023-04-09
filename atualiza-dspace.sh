@@ -6,8 +6,7 @@ source ./variaveis-para-atualizacao.properties
 docker pull intel/qat-crypto-base:qatsw-ubuntu
 
 export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12)
-docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu  /
-        sed -i -E "s/CREATE USER dspace WITH PASSWORD '(.*)'/CREATE USER dspace WITH PASSWORD '${DSPACE_POSTGRES_PASSWORD}'/g" /root/docker/postgres/scripts/prepara-postgres.sh
+docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu  sed -i -E "s/CREATE USER dspace WITH PASSWORD '(.*)'/CREATE USER dspace WITH PASSWORD '${DSPACE_POSTGRES_PASSWORD}'/g" /root/docker/postgres/scripts/prepara-postgres.sh
 
 ##########
 ## Diretório de instalação
