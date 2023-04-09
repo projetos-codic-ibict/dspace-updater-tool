@@ -3,26 +3,27 @@ networks:
   dspacenet:
 
 services:
-  # DSpace (backend) webapp container
+
+  dspacedb:
+    build:
+      context: docker/postgres
+      dockerfile: Dockerfile
+    image:
+      ibict/postgresdspace7
+    container_name: bd_dspace7
+    ports:
+      - "127.0.0.1:5006:5432"
+    environment:
+      - TZ=America/Sao_Paulo
+    networks:
+      dspacenet:
+
   dspace:
     container_name: dspace
     environment:
-      # Below syntax may look odd, but it is how to override dspace.cfg settings via env variables.
-      # See https://github.com/DSpace/DSpace/blob/main/dspace/config/config-definition.xml
-      # __P__ => "." (e.g. dspace__P__dir => dspace.dir)
-      # __D__ => "-" (e.g. google__D__metadata => google-metadata)
-      # dspace.dir: Must match with Dockerfile's DSPACE_INSTALL directory.
       dspace__P__dir: /dspace
-      # Uncomment to set a non-default value for dspace.server.url or dspace.ui.url
-      dspace__P__server__P__url: http://localhost:8080/server
-      dspace__P__ui__P__url: http://localhost:4000
-      dspace__P__name: 'Deposita'
-      # db.url: Ensure we are using the 'dspacedb' image for our database
       db__P__url: 'jdbc:postgresql://host.docker.internal:5006/dspace'
-      # solr.server: Ensure we are using the 'dspacesolr' image for Solr
       solr__P__server: http://dspacesolr:8983/solr
-      # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests
-      # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
       proxies__P__trusted__P__ipranges: '172.23.0'
     build:
       context: .
@@ -30,10 +31,10 @@ services:
     networks:
       dspacenet:
     ports:
-    - published: 8080
+    - published: 8080 #Port for tomcat
       target: 8080
-    - published: 8009
-      target: 8009
+#    - published: 8009
+#      target: 8009
     stdin_open: true
     tty: true
     extra_hosts:
@@ -76,9 +77,9 @@ services:
     image: solr:8.11-slim
     networks:
       dspacenet:
-    ports:
-    - published: 8983
-      target: 8983
+#    ports:
+#    - published: 8983
+#      target: 8983
     stdin_open: true
     tty: true
     working_dir: /var/solr/data

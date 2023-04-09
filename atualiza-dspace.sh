@@ -2,61 +2,12 @@
 
 source ./variaveis-para-atualizacao.properties
 
-echo "Antes de iniciar edite as variáveis abaixo no arquivo migracao-dspace/dockerfiles/docker-compose_migration.yml:
-      	dspace__P__server__P__url
-      	dspace__P__ui__P__url
-      	dspace__P__name
+# Senha do postgres
+docker pull intel/qat-crypto-base:qatsw-ubuntu
 
-      No arquivo migracao-dspace/dockerfiles/docker-compose_frontend.yml, edite as variáveis:
-      	DSPACE_UI_SSL
-      	DSPACE_UI_HOST
-      	DSPACE_UI_PORT
-      	DSPACE_UI_NAMESPACE
-      	DSPACE_REST_SSL
-      	DSPACE_REST_HOST
-      	DSPACE_REST_PORT
-      	DSPACE_REST_NAMESPACE
-
-      No arquivo variaveis-para-atualizacao.properties, edite todas variáveis "
-
-read -p "Todos os arquivos estão devidamente editados?" -n 1 -r
-echo    
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    exit 1
-fi
-
-
-
-#############################
-## Backups
-#############################
-#
-##########
-## Postgres
-##########
-
-echo "Generating DSpace dump"
-
-docker run postgres:12 pg_dump --dbname=${POSTGRES_URL_WITHUSERNAME_AND_PASSWORD}  > ./dockerfiles/docker/postgres/dump.sql
-
-##
-read -p "O último comando ocorreu com sucesso? " -n 1 -r
-echo    
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    exit 1
-fi
-
-docker-compose -f dockerfiles/docker-compose-postgres-only.yml up --build -d
-
-#
-read -p "O último comando ocorreu com sucesso? " -n 1 -r
-echo    
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    exit 1
-fi
+export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12)
+docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu  /
+        sed -i -E "s/CREATE USER dspace WITH PASSWORD '(.*)'/CREATE USER dspace WITH PASSWORD '${DSPACE_POSTGRES_PASSWORD}'/g" /root/docker/postgres/scripts/prepara-postgres.sh
 
 ##########
 ## Diretório de instalação
@@ -87,10 +38,19 @@ rm dspace-7.5.zip
 mv DSpace-dspace-7.5 source
 
 cp ./dockerfiles/Dockerfile_backend source/DSpace-dspace-7.5/Dockerfile
+
+docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/docker-compose_migration.yml
+
 cp ./dockerfiles/docker-compose_migration.yml source/DSpace-dspace-7.5/
 
 docker rm -f dspace
 docker rm -f dspacesolr
+
+echo "" > source/DSpace-dspace-7.5/dspace/config/local.cfg
+cat ./local.cfg > source/DSpace-dspace-7.5/dspace/config/local.cfg
+echo "db.url = jdbc:postgresql://bd_dspace7:5432/dspace" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
+echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
+echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 
 echo "Setting up DSpace backend"
 
@@ -110,15 +70,29 @@ rm dspace-7.5.zip
 mv dspace-angular-dspace-7.5 source
 rm -rf dspace-7.5
 cp ./dockerfiles/Dockerfile_frontend source/dspace-angular-dspace-7.5/Dockerfile
+
+
+docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_UI_SSL: '(.*)'/DSPACE_UI_SSL: '${FRONTEND_USES_SSL}'/g" /root/docker-compose_frontend.yml
+
+docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_UI_HOST: '(.*)'/DSPACE_UI_HOST: '${FRONTEND_HOSTNAME}'/g" /root/docker-compose_frontend.yml
+
+docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_UI_PORT: '(.*)'/DSPACE_UI_PORT: '${FRONTEND_PORT}'/g" /root/docker-compose_frontend.yml
+
+docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_REST_SSL: '(.*)'/DSPACE_REST_SSL: '${BACKEND_USES_SSL}'/g" /root/docker-compose_frontend.yml
+
+docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_REST_HOST: '(.*)'/DSPACE_REST_HOST: '${BACKEND_HOSTNAME}'/g" /root/docker-compose_frontend.yml
+
+docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_REST_PORT: '(.*)'/DSPACE_REST_PORT: '${BACKEND_PORT}'/g" /root/docker-compose_frontend.yml
+
+
 cp ./dockerfiles/docker-compose_frontend.yml source/dspace-angular-dspace-7.5/docker/docker-compose.yml
 
-#
-read -p "O último comando ocorreu com sucesso? " -n 1 -r
-echo    
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    exit 1
-fi
 
 echo "Setting up DSpace angular"
 docker-compose -f source/dspace-angular-dspace-7.5/docker/docker-compose.yml up --build -d
