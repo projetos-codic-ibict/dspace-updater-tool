@@ -6,7 +6,7 @@ services:
 
   dspacedb:
     build:
-      context: ../../dockerfiles/docker/postgres
+      context: ../postgres
       dockerfile: Dockerfile
     image:
       ibict/postgresdspace7
@@ -14,6 +14,7 @@ services:
     ports:
       - "127.0.0.1:5006:5432"
     environment:
+      - POSTGRES_PASSWORD=xxxxx #Postgres password
       - TZ=America/Sao_Paulo
     networks:
       dspacenet:

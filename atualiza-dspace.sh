@@ -2,11 +2,19 @@
 
 source ./variaveis-para-atualizacao.properties
 
+# Este procedimento leva em torno de 30 minutos, o tempo pode veriar de acordo com o hardware utilizado
+# Certifique de que o seu servidor tenha ao menos o dobro de disco rígido disponível, quando comparado ao espaço utilizado
+# Certifique que seu servidor tenha ao menos 8GB de RAM
+# Editar arquivos não solicitados pode acarretar na falha de execução deste programa
+
+# Vantagens
+# Não exige que seu servidor tenha java (ou java atualizado), ant, maven
+# Não é instrusivo, toods recursos do seu dspace antigo serão copiados, com única exceção do diretório "assetstore"
+
 # Senha do postgres
 docker pull intel/qat-crypto-base:qatsw-ubuntu
 
 export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12)
-docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu  sed -i -E "s/CREATE USER dspace WITH PASSWORD '(.*)'/CREATE USER dspace WITH PASSWORD '${DSPACE_POSTGRES_PASSWORD}'/g" /root/docker/postgres/scripts/prepara-postgres.sh
 
 ##########
 ## Diretório de instalação
@@ -29,10 +37,14 @@ rm dspace-7.5.zip
 mv DSpace-dspace-7.5 source
 
 cp ./dockerfiles/Dockerfile_backend source/DSpace-dspace-7.5/Dockerfile
-
-docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/docker-compose_migration.yml
-
 cp ./dockerfiles/docker-compose_migration.yml source/DSpace-dspace-7.5/
+
+docker run -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-7.5/docker-compose_migration.yml
+docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.5/docker-compose_migration.yml
+
+cp -r ./dockerfiles/docker/postgres ./source
+cp ./dump-postgres/dump.sql ./source/postgres
+docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu  sed -i -E "s/CREATE USER dspace WITH PASSWORD '(.*)'/CREATE USER dspace WITH PASSWORD '${DSPACE_POSTGRES_PASSWORD}'/g" /root/postgres/scripts/prepara-postgres.sh
 
 docker rm -f dspace
 docker rm -f dspacesolr
