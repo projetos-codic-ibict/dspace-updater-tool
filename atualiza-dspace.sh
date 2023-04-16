@@ -58,8 +58,6 @@ echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_POR
 
 echo "Setting up DSpace backend"
 
-docker rm -f dspace
-docker rmi -f dspace-dspace-75_dspace
 
 docker-compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
@@ -93,8 +91,6 @@ docker run -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
 
 cp ./dockerfiles/docker-compose_frontend.yml source/dspace-angular-dspace-7.5/docker/docker-compose.yml
 
-docker rm -f dspace-angular
-docker rmi -f docker_dspace-angular
 
 echo "Setting up DSpace angular"
 docker-compose -f source/dspace-angular-dspace-7.5/docker/docker-compose.yml up --build -d
