@@ -4,7 +4,7 @@ set -e
 
 function cria_usuario_e_bd() {
     echo "Criando usuário DSpace"
-    psql --username=postgres -c "CREATE USER dspace WITH PASSWORD 'ghRY9HMUGI47JPKk';"
+    psql --username=postgres -c "CREATE USER dspace WITH PASSWORD 'cDVf9UnCskeirG4K';"
     psql --username=postgres -c "CREATE DATABASE dspace WITH OWNER dspace;"
     psql --username=postgres -c "GRANT ALL PRIVILEGES ON DATABASE dspace TO dspace;"
 }

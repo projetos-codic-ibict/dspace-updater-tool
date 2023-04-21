@@ -1,0 +1,96 @@
+version: '3.7'
+
+
+services:
+
+  dspacedb:
+    build:
+      context: ../postgres
+      dockerfile: Dockerfile
+    image:
+      ibict/postgresdspace7
+    container_name: bd_dspace7
+    ports:
+      - "127.0.0.1:5006:5432"
+    environment:
+      - POSTGRES_PASSWORD=xxxxx #Postgres password
+      - TZ=America/Sao_Paulo
+    networks:
+      - dspacenet
+  #    volumes:
+  #      -  ../../postgres-data:/var/lib/postgresql/data
+
+  dspace:
+    container_name: dspace
+    environment:
+      dspace__P__dir: /dspace
+      solr__P__server: http://dspacesolr:8983/solr
+      proxies__P__trusted__P__ipranges: '172.23.0'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - dspacenet
+    ports:
+      - published: 8080 #Port for tomcat
+        target: 8080
+    stdin_open: true
+    tty: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Keep DSpace assetstore directory between reboots
+      - ../../dspace-install-dir:/dspace
+      - m2:/root/.m2
+    entrypoint:
+      - /bin/bash
+      - '-c'
+      - |
+        catalina.sh run
+  # DSpace Solr container
+  dspacesolr:
+    container_name: dspacesolr
+    # Uses official Solr image at https://hub.docker.com/_/solr/
+    image: solr:8.11-slim
+    networks:
+      - dspacenet
+    #    ports:
+    #    - published: 8983
+    #      target: 8983
+    stdin_open: true
+    tty: true
+    working_dir: /var/solr/data
+    volumes:
+      # Mount our local Solr core configs so that they are available as Solr configsets on container
+      - ./dspace/solr/authority:/opt/solr/server/solr/configsets/authority
+      - ./dspace/solr/oai:/opt/solr/server/solr/configsets/oai
+      - ./dspace/solr/search:/opt/solr/server/solr/configsets/search
+      - ./dspace/solr/statistics:/opt/solr/server/solr/configsets/statistics
+      # Keep Solr data directory between reboots
+      - solr_data:/var/solr/data
+    # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
+    # * First, run precreate-core to create the core (if it doesn't yet exist). If exists already, this is a no-op
+    # * Second, copy updated configs from mounted configsets to this core. If it already existed, this updates core
+    #   to the latest configs. If it's a newly created core, this is a no-op.
+    entrypoint:
+      - /bin/bash
+      - '-c'
+      - |
+        init-var-solr
+        precreate-core authority /opt/solr/server/solr/configsets/authority
+        cp -r -u /opt/solr/server/solr/configsets/authority/* authority
+        precreate-core oai /opt/solr/server/solr/configsets/oai
+        cp -r -u /opt/solr/server/solr/configsets/oai/* oai
+        precreate-core search /opt/solr/server/solr/configsets/search
+        cp -r -u /opt/solr/server/solr/configsets/search/* search
+        precreate-core statistics /opt/solr/server/solr/configsets/statistics
+        cp -r -u /opt/solr/server/solr/configsets/statistics/* statistics
+        exec solr -f
+volumes:
+  solr_data:
+  m2:
+
+networks:
+  dspacenet:
+    name: dspacenet
+    driver: bridge
