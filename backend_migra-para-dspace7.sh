@@ -11,8 +11,8 @@ source ./variaveis-para-atualizacao.properties
 # Não exige que seu servidor tenha java (ou java atualizado), ant, maven
 # Não é instrusivo, toods recursos do seu dspace antigo serão copiados, com única exceção do diretório "assetstore"
 
-# Senha do postgres
 docker pull intel/qat-crypto-base:qatsw-ubuntu
+docker pull kubeless/unzip
 
 export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12)
 
@@ -29,17 +29,18 @@ ln -s $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
 # Backend
 #########
 
-echo "Downloading DSpace versions"
-wget https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.5.zip
+docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip \
+ && curl https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.5.zip -o dspace-7.5.zip -L \
+ && unzip dspace-7.5.zip \
+ && rm dspace-7.5.zip \
+ && rm -rf dspace-7.5
 
-unzip dspace-7.5.zip
-rm dspace-7.5.zip
 mv DSpace-dspace-7.5 source
 
 cp ./dockerfiles/Dockerfile_backend source/DSpace-dspace-7.5/Dockerfile
 cp ./dockerfiles/docker-compose_migration.yml source/DSpace-dspace-7.5/
 
-docker run -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-7.5/docker-compose_migration.yml
+docker run --rm -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-7.5/docker-compose_migration.yml
 sleep 1
 docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.5/docker-compose_migration.yml
 
