@@ -25,6 +25,7 @@ services:
     environment:
       dspace__P__dir: /dspace
       solr__P__server: http://dspacesolr:8983/solr
+      TZ: 'America/Sao_Paulo'
       proxies__P__trusted__P__ipranges: '172.23.0'
     build:
       context: .

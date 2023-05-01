@@ -26,6 +26,7 @@ services:
       dspace__P__dir: /dspace
       solr__P__server: http://dspacesolr:8983/solr
       proxies__P__trusted__P__ipranges: '172.23.0'
+      TZ: 'America/Sao_Paulo'
     build:
       context: .
       dockerfile: Dockerfile

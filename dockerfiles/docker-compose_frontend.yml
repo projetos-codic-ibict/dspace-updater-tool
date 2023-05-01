@@ -25,6 +25,7 @@ services:
       DSPACE_REST_PORT: '8080'
       DSPACE_REST_NAMESPACE: '/server'
       NODE_OPTIONS: '--max-old-space-size=8192'
+      TZ: 'America/Sao_Paulo'
     build:
       context: ..
       dockerfile: Dockerfile

@@ -36,7 +36,7 @@ docker run --rm -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
 
 
 docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5:/root intel/qat-crypto-base:qatsw-ubuntu \
-  sed -i -E "s/\/\/ Angular Universal settings/defaultLanguage: 'pt_BR',/g" /root/src/environments/environment.production.ts
+  sed -i -E "s/\/\/ Angular Universal settings/defaultLanguage: 'pt_BR',/g" /root/src/environments/environment.ts
 
 
 

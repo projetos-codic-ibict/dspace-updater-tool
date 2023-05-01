@@ -39,10 +39,13 @@ mv DSpace-dspace-7.5 source
 
 cp ./dockerfiles/Dockerfile_backend source/DSpace-dspace-7.5/Dockerfile
 cp ./dockerfiles/docker-compose_migration.yml source/DSpace-dspace-7.5/
+cp ./dockerfiles/docker-compose_restart.yml source/DSpace-dspace-7.5/
 
 docker run --rm -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-7.5/docker-compose_migration.yml
+docker run --rm -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-7.5/docker-compose_restart.yml
 sleep 1
 docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.5/docker-compose_migration.yml
+docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.5/docker-compose_restart.yml
 
 cp -r ./dockerfiles/docker/postgres ./source
 cp ./dump-postgres/dump.sql ./source/postgres
