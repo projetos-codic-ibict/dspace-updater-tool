@@ -6,11 +6,20 @@ docker pull intel/qat-crypto-base:qatsw-ubuntu
 docker pull kubeless/unzip
 
 
-docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip \
- && curl https://github.com/DSpace/dspace-angular/archive/refs/tags/dspace-7.5.zip -o dspace-7.5.zip -L \
- && unzip dspace-7.5.zip \
- && rm dspace-7.5.zip \
- && rm -rf dspace-7.5
+if [[ "${FRONTEND_ADDRESS_GIT}" ]]; then
+
+  docker run --rm -e FRONTEND_ADDRESS_GIT:${FRONTEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git \
+    && git clone --depth 1 ${FRONTEND_ADDRESS_GIT} dspace-angular-dspace-7.5
+
+else
+  docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip \
+   && curl https://github.com/DSpace/dspace-angular/archive/refs/tags/dspace-7.5.zip -o dspace-7.5.zip -L \
+   && unzip dspace-7.5.zip \
+   && rm dspace-7.5.zip \
+   && rm -rf dspace-7.5
+
+fi
+
 
 mv dspace-angular-dspace-7.5 source
 cp ./dockerfiles/Dockerfile_frontend source/dspace-angular-dspace-7.5/Dockerfile
@@ -37,6 +46,9 @@ docker run --rm -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
 
 docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5:/root intel/qat-crypto-base:qatsw-ubuntu \
   sed -i -E "s/\/\/ Angular Universal settings/defaultLanguage: 'pt_BR',/g" /root/src/environments/environment.ts
+
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/production\: false/production\: true/g" /root/src/environments/environment.ts
 
 
 

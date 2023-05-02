@@ -13,6 +13,7 @@ source ./variaveis-para-atualizacao.properties
 
 docker pull intel/qat-crypto-base:qatsw-ubuntu
 docker pull kubeless/unzip
+docker pull alpine/git
 
 export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12)
 
@@ -29,13 +30,22 @@ ln -s $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
 # Backend
 #########
 
-docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip \
- && curl https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.5.zip -o dspace-7.5.zip -L \
- && unzip dspace-7.5.zip \
- && rm dspace-7.5.zip \
- && rm -rf dspace-7.5
+if [[ "${BACKEND_ADDRESS_GIT}" ]]; then
+
+  docker run --rm -e BACKEND_ADDRESS_GIT:${BACKEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git \
+    && git clone --depth 1 ${BACKEND_ADDRESS_GIT} DSpace-dspace-7.5
+
+else
+  docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip \
+   && curl https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.5.zip -o dspace-7.5.zip -L \
+   && unzip dspace-7.5.zip \
+   && rm dspace-7.5.zip \
+   && rm -rf dspace-7.5
+
+fi
 
 mv DSpace-dspace-7.5 source
+
 
 cp ./dockerfiles/Dockerfile_backend source/DSpace-dspace-7.5/Dockerfile
 cp ./dockerfiles/docker-compose_migration.yml source/DSpace-dspace-7.5/
