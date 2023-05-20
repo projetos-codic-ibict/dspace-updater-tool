@@ -46,6 +46,7 @@ else
 
 fi
 
+mkdir source || true
 mv DSpace-dspace-7.5 source
 
 

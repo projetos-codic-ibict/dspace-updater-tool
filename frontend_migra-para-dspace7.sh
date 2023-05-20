@@ -20,7 +20,7 @@ else
 
 fi
 
-
+mkdir source || true
 mv dspace-angular-dspace-7.5 source
 cp ./dockerfiles/Dockerfile_frontend source/dspace-angular-dspace-7.5/Dockerfile
 
