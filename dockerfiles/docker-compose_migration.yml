@@ -3,13 +3,13 @@ version: '3.7'
 
 services:
 
-  dspacedb:
+  dspace7db:
     build:
       context: ../postgres
       dockerfile: Dockerfile
     image:
       ibict/postgresdspace7
-    container_name: bd_dspace7
+    container_name: dspace7db
     ports:
       - "127.0.0.1:5006:5432"
     environment:
@@ -20,11 +20,11 @@ services:
 #    volumes:
 #      -  ../../postgres-data:/var/lib/postgresql/data
 
-  dspace:
-    container_name: dspace
+  dspace7:
+    container_name: dspace7
     environment:
       dspace__P__dir: /dspace
-      solr__P__server: http://dspacesolr:8983/solr
+      solr__P__server: http://dspace7solr:8983/solr
       TZ: 'America/Sao_Paulo'
       proxies__P__trusted__P__ipranges: '172.23.0'
     build:
@@ -65,8 +65,8 @@ services:
       ls -lsah /dspace/webapps
       catalina.sh run
   # DSpace Solr container
-  dspacesolr:
-    container_name: dspacesolr
+  dspace7solr:
+    container_name: dspace7solr
     # Uses official Solr image at https://hub.docker.com/_/solr/
     image: solr:8.11-slim
     networks:

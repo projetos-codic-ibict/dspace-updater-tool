@@ -13,16 +13,16 @@ version: '3.7'
 networks:
   dspacenet:
 services:
-  dspace-angular:
-    container_name: dspace-angular
+  dspace7-angular:
+    container_name: dspace7-angular
     environment:
       DSPACE_UI_SSL: 'false'
       DSPACE_UI_HOST: '192.169.5.126'
-      DSPACE_UI_PORT: '4000'
+      DSPACE_UI_PORT: '5000'
       DSPACE_UI_NAMESPACE: /
       DSPACE_REST_SSL: 'false'
       DSPACE_REST_HOST: '192.169.5.126'
-      DSPACE_REST_PORT: '8080'
+      DSPACE_REST_PORT: '9080'
       DSPACE_REST_NAMESPACE: '/server'
       NODE_OPTIONS: '--max-old-space-size=8192'
       TZ: 'America/Sao_Paulo'
@@ -34,8 +34,6 @@ services:
     ports:
     - published: 4000
       target: 4000
-#    - published: 9876
-#      target: 9876
     stdin_open: true
     tty: true
     extra_hosts:

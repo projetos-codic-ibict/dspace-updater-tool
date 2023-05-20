@@ -23,25 +23,32 @@ fi
 mkdir source || true
 mv dspace-angular-dspace-7.5 source
 cp ./dockerfiles/Dockerfile_frontend source/dspace-angular-dspace-7.5/Dockerfile
+cp ./dockerfiles/docker-compose_frontend.yml source/dspace-angular-dspace-7.5/docker/docker-compose.yml
 
 
-docker run --rm -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
-  sed -i -E "s/DSPACE_UI_SSL: '(.*)'/DSPACE_UI_SSL: '${FRONTEND_USES_SSL}'/g" /root/docker-compose_frontend.yml
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_UI_SSL: '(.*)'/DSPACE_UI_SSL: '${FRONTEND_USES_SSL}'/g" /root/docker-compose.yml
 
-docker run --rm -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
-  sed -i -E "s/DSPACE_UI_HOST: '(.*)'/DSPACE_UI_HOST: '${FRONTEND_HOSTNAME}'/g" /root/docker-compose_frontend.yml
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_UI_HOST: '(.*)'/DSPACE_UI_HOST: '${FRONTEND_HOSTNAME}'/g" /root/docker-compose.yml
 
-docker run --rm -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
-  sed -i -E "s/DSPACE_UI_PORT: '(.*)'/DSPACE_UI_PORT: '${FRONTEND_PORT}'/g" /root/docker-compose_frontend.yml
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_UI_PORT: '(.*)'/DSPACE_UI_PORT: '${FRONTEND_PORT}'/g" /root/docker-compose.yml
 
-docker run --rm -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
-  sed -i -E "s/DSPACE_REST_SSL: '(.*)'/DSPACE_REST_SSL: '${BACKEND_USES_SSL}'/g" /root/docker-compose_frontend.yml
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/published: (.*)/published: ${FRONTEND_PORT}/g" /root/docker-compose.yml
 
-docker run --rm -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
-  sed -i -E "s/DSPACE_REST_HOST: '(.*)'/DSPACE_REST_HOST: '${BACKEND_HOSTNAME}'/g" /root/docker-compose_frontend.yml
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/target: (.*)/target: ${FRONTEND_PORT}/g" /root/docker-compose.yml
 
-docker run --rm -v $(pwd)/dockerfiles:/root intel/qat-crypto-base:qatsw-ubuntu \
-  sed -i -E "s/DSPACE_REST_PORT: '(.*)'/DSPACE_REST_PORT: '${BACKEND_PORT}'/g" /root/docker-compose_frontend.yml
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_REST_SSL: '(.*)'/DSPACE_REST_SSL: '${BACKEND_USES_SSL}'/g" /root/docker-compose.yml
+
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_REST_HOST: '(.*)'/DSPACE_REST_HOST: '${BACKEND_HOSTNAME}'/g" /root/docker-compose.yml
+
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
+  sed -i -E "s/DSPACE_REST_PORT: '(.*)'/DSPACE_REST_PORT: '${BACKEND_PORT}'/g" /root/docker-compose.yml
 
 
 docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5:/root intel/qat-crypto-base:qatsw-ubuntu \
@@ -52,7 +59,6 @@ docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5:/root intel/qat-crypt
 
 
 
-cp ./dockerfiles/docker-compose_frontend.yml source/dspace-angular-dspace-7.5/docker/docker-compose.yml
 
 
 echo "Setting up DSpace angular"

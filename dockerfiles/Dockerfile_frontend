@@ -5,6 +5,10 @@ FROM node:17-alpine
 WORKDIR /app
 ADD . /app/
 EXPOSE 4000
+
+ENV TZ="America/Sao_Paulo"
+
+
 RUN export NODE_OPTIONS="--max-old-space-size=8192"
 # Ensure Python and other build tools are available
 # These are needed to install some node modules, especially on linux/arm64

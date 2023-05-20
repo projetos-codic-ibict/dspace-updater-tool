@@ -38,7 +38,7 @@ if [[ "${BACKEND_ADDRESS_GIT}" ]]; then
 else
   docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip \
    && curl https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.5.zip -o dspace-7.5.zip -L \
-   && unzip dspace-7.5.zip \
+   && unzip -q dspace-7.5.zip \
    && sleep 1 \
    && rm dspace-7.5.zip \
    && sleep 1 \
@@ -67,7 +67,7 @@ docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/sou
 echo "" > source/DSpace-dspace-7.5/dspace/config/local.cfg
 cat ./local.cfg > source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "db.password = ${DSPACE_POSTGRES_PASSWORD}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
-echo "db.url = jdbc:postgresql://bd_dspace7.dspacenet:5432/dspace" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
+echo "db.url = jdbc:postgresql://dspace7db.dspacenet:5432/dspace" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 

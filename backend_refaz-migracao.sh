@@ -8,10 +8,11 @@ rm -rf ./source/DSpace-dspace-7.5
 rm dspace-7.5.zip || true
 
 
-docker rm -f dspace || true
-docker rmi -f dspace-dspace-75_dspace || true
+docker rm -f dspace7 || true
+docker rmi -f dspace-dspace-75_dspace7 || true
 
-docker rm -f bd_dspace7 || true
+docker rm -f dspace7db || true
+docker rm -f dspace7solr || true
 docker rmi -f ibict/postgresdspace7 || true
 
 ./backend_migra-para-dspace7.sh
