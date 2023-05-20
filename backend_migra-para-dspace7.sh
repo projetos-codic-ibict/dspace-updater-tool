@@ -24,7 +24,7 @@ export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu 
 echo "Copying DSpace DIR files (config and assetstore)"
 cp -r $DSPACE_INSTALL_DIR/config dspace-install-dir
 cp -r $DSPACE_INSTALL_DIR/solr dspace-install-dir
-ln -s $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
+cp -r $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
 
 #########
 # Backend
@@ -76,3 +76,7 @@ echo $DSPACE_POSTGRES_PASSWORD
 
 
 docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
+
+sleep 10
+
+docker exec -it dspace7 /dspace/bin/dspace filter-media
