@@ -1,3 +1,8 @@
+# Migrador de versões antigas do DSpace para versão 7
+
+Autor: Márcio Gurgel (marcio.rga@gmail.com)
+
+
 ### Problemas comuns
 
 #### Erro 500 na tela
