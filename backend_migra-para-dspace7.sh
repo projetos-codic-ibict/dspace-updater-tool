@@ -79,4 +79,4 @@ docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --bui
 
 sleep 10
 
-docker exec -it dspace7 /dspace/bin/dspace filter-media
+docker exec -it dspace7 /dspace/bin/dspace filter-media &

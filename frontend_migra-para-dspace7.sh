@@ -14,7 +14,7 @@ if [[ "${FRONTEND_ADDRESS_GIT}" ]]; then
 else
   docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip \
    && curl https://github.com/DSpace/dspace-angular/archive/refs/tags/dspace-7.5.zip -o dspace-7.5.zip -L \
-   && unzip dspace-7.5.zip \
+   && unzip -q dspace-7.5.zip \
    && rm dspace-7.5.zip \
    && rm -rf dspace-7.5
 
