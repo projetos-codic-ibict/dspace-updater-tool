@@ -1,4 +1,4 @@
-# Migrador de versões antigas do DSpace para versão 7
+# (versão beta) Migrador de versões antigas do DSpace para versão 7
 
 Autor: Márcio Gurgel (marcio.rga@gmail.com)
 
