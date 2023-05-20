@@ -56,4 +56,4 @@ cp ./dockerfiles/docker-compose_frontend.yml source/dspace-angular-dspace-7.5/do
 
 
 echo "Setting up DSpace angular"
-docker-compose -f source/dspace-angular-dspace-7.5/docker/docker-compose.yml up --build -d
+docker compose -f source/dspace-angular-dspace-7.5/docker/docker-compose.yml up --build -d

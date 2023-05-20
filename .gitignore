@@ -1,3 +1,4 @@
 /tmp/*
 /dspace-install-dir/*
 /postgres/*
+/dump-postgres/dump.sql

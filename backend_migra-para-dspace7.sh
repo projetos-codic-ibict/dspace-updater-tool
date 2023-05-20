@@ -39,7 +39,9 @@ else
   docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip \
    && curl https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.5.zip -o dspace-7.5.zip -L \
    && unzip dspace-7.5.zip \
+   && sleep 1 \
    && rm dspace-7.5.zip \
+   && sleep 1 \
    && rm -rf dspace-7.5
 
 fi
@@ -72,4 +74,4 @@ echo "Setting up DSpace backend"
 echo $DSPACE_POSTGRES_PASSWORD
 
 
-docker-compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
+docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
