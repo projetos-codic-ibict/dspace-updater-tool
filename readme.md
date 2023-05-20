@@ -8,10 +8,8 @@ Autor: Márcio Gurgel (marcio.rga@gmail.com)
 - Copie o diretório de instalação do DSpace antigo para o servidor onde o DSpace 7 irá rodar. Os diretórios obrigatórios são: config, assetstore e solr.
 - Preencha o arquivo `variaveis-para-atualizacao.properties` .
 - Adicione configurações adicionais no arquivo `dspace.cfg`, como informações para envio de e-mail, etc.
-- Rode o script `backend_migra-para-dspace7.sh`
-  - Em caso de problemas nesta etapa, refaça o procedimento pelo script `backend_refaz-migracao.sh`
-- Rode o script `frontend_migra-para-dspace7.sh`
-    - Em caso de problemas nesta etapa, refaça o procedimento pelo script `frontend_refaz-migracao.sh`
+- Rode o script `migra-para-dspace7.sh`
+  - Caso ocorra algum problema com o preenchimento das variáveis, efetue a correção e rode o script novamente.
 
 - Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor;
 - Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `variaveis-para-atualizacao.properties`.
