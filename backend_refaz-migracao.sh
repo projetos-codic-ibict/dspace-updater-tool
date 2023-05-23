@@ -2,11 +2,14 @@
 
 echo "Este procedimento irá re-utilizar o dump do postgres\n"
 
-echo "Informe o usuário root para remover o diretório de instalação do DSpace 7 (um novo será recriado)"
-sudo rm -rf ./dspace-install-dir/*
+
+if [ "$(ls -A ./dspace-install-dir)" ]; then
+  echo "Informe o usuário root para remover o diretório de instalação do DSpace 7 (um novo será recriado)"
+  sudo rm -rf ./dspace-install-dir/*
+fi
+
 rm -rf ./source/DSpace-dspace-7.5
 rm dspace-7.5.zip || true
-
 
 docker rm -f dspace7 || true
 docker rmi -f dspace-dspace-75_dspace7 || true
