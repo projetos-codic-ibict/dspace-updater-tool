@@ -5,6 +5,10 @@ Autor: Márcio Gurgel (marcio.rga@gmail.com)
 ## Procedimento
 
 - Instale os comandos "docker" e "docker compose" no seu servidor;
+- Gere um dump do banco de dados (PostgreSQL) com o comando `pg_dump`. O nome do arquivo deve ser `dump.sql` e deve ser colocado no diretório `dump-postgres`;
+  - Comando de exemplo para geração do dump: 
+  
+    `pg_dump --dbname=postgresql://dspace:dspace@192.169.5.126:5005/dspace > dump.sql`
 - Copie o diretório de instalação do DSpace antigo para o servidor onde o DSpace 7 irá rodar. Os diretórios obrigatórios são: config, assetstore e solr.
 - Preencha o arquivo `variaveis-para-atualizacao.properties` .
 - Adicione configurações adicionais no arquivo `dspace.cfg`, como informações para envio de e-mail, etc.
