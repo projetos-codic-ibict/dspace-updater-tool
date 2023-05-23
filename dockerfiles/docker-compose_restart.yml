@@ -11,7 +11,7 @@ services:
       ibict/postgresdspace7
     container_name: dspace7db
     ports:
-      - "127.0.0.1:5006:5432"
+      - "127.0.0.1:8787:5432"
     environment:
       - POSTGRES_PASSWORD=xxxxx #Postgres password
       - TZ=America/Sao_Paulo
@@ -63,10 +63,10 @@ services:
     working_dir: /var/solr/data
     volumes:
       # Mount our local Solr core configs so that they are available as Solr configsets on container
-      - ./dspace/solr/authority:/opt/solr/server/solr/configsets/authority
-      - ./dspace/solr/oai:/opt/solr/server/solr/configsets/oai
-      - ./dspace/solr/search:/opt/solr/server/solr/configsets/search
-      - ./dspace/solr/statistics:/opt/solr/server/solr/configsets/statistics
+      - ../../dspace-install-dir/solr/authority:/opt/solr/server/solr/configsets/authority
+      - ../../dspace-install-dir/solr/oai:/opt/solr/server/solr/configsets/oai
+      - ../../dspace-install-dir/solr/search:/opt/solr/server/solr/configsets/search
+      - ../../dspace-install-dir/solr/statistics:/opt/solr/server/solr/configsets/statistics
       # Keep Solr data directory between reboots
       - solr_data:/var/solr/data
     # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
