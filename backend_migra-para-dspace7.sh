@@ -21,7 +21,7 @@ export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu 
 ## Diretório de instalação
 ##########
 
-echo "Copying DSpace DIR files (config and assetstore)"
+echo "Copiando arquivos do DSpace antigo"
 cp -r $DSPACE_INSTALL_DIR/config dspace-install-dir
 cp -r $DSPACE_INSTALL_DIR/solr dspace-install-dir
 cp -r $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
@@ -72,7 +72,7 @@ echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PO
 echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 
 
-./migra-estatisticas.sh
+./migra-solr.sh
 
 docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
