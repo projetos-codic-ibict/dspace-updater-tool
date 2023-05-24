@@ -71,9 +71,8 @@ echo "db.url = jdbc:postgresql://dspace7db.dspacenet:5432/dspace" >> source/DSpa
 echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 
-echo "Setting up DSpace backend"
-echo $DSPACE_POSTGRES_PASSWORD
 
+./migra-estatisticas.sh
 
 docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
@@ -81,4 +80,3 @@ sleep 10
 
 docker exec -it dspace7 /dspace/bin/dspace filter-media &
 
-./migra-estatisticas.sh
