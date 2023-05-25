@@ -17,7 +17,6 @@ else
    && unzip -q dspace-7.5.zip \
    && rm dspace-7.5.zip \
    && rm -rf dspace-7.5
-
 fi
 
 mkdir source || true > /dev/null 2>&1

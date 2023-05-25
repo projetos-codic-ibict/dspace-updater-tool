@@ -30,6 +30,7 @@ cp -r $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
 # Backend
 #########
 
+echo "Efetuando download do fonte do DSpace"
 if [[ "${BACKEND_ADDRESS_GIT}" ]]; then
 
   docker run --rm -e BACKEND_ADDRESS_GIT:${BACKEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git \
