@@ -21,7 +21,7 @@ for version in 4 5 6 7 8
 do
    echo "Atualizando indices Solr para versão ${version}... (aguarde)"
    docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
-      java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/authority/data/index \
+     && java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/authority/data/index \
      && java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/oai/data/index \
      && java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/search/data/index \
      && java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/statistics/data/index
