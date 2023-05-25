@@ -11,8 +11,8 @@ docker run --rm -e $URL_BASE:URL_BASE -e $DEST_FOLDER:DEST_FOLDER -v $(pwd):/unz
  && curl $URL_BASE/lucene-backward-codecs/5.5.4/lucene-backward-codecs-5.5.4.jar -o $DEST_FOLDER/back-lucene-core-5.jar -L \
  && curl $URL_BASE/lucene-core/6.6.0/lucene-core-6.6.0.jar -o $DEST_FOLDER/lucene-core-6.jar -L \
  && curl $URL_BASE/lucene-backward-codecs/6.6.0/lucene-backward-codecs-6.6.0.jar -o $DEST_FOLDER/back-lucene-core-6.jar -L \
- && curl $URL_BASE/lucene-core/7.7.3/lucene-core-7.7.3.jar -o $DEST_FOLDER/lucene-core-7.jar -L \
- && curl $URL_BASE/lucene-backward-codecs/7.7.3/lucene-backward-codecs-7.7.3.jar -o $DEST_FOLDER/back-lucene-core-7.jar -L \
+ && curl $URL_BASE/lucene-core/7.7.0/lucene-core-7.7.0.jar -o $DEST_FOLDER/lucene-core-7.jar -L \
+ && curl $URL_BASE/lucene-backward-codecs/7.7.0/lucene-backward-codecs-7.7.0.jar -o $DEST_FOLDER/back-lucene-core-7.jar -L \
  && curl $URL_BASE/lucene-core/8.11.1/lucene-core-8.11.1.jar -o $DEST_FOLDER/lucene-core-8.jar -L \
  && curl $URL_BASE/lucene-backward-codecs/8.11.1/lucene-backward-codecs-8.11.1.jar -o $DEST_FOLDER/back-lucene-core-8.jar -L
 
