@@ -1,6 +1,6 @@
 # Migrador de versões antigas do DSpace para versão 7
 
-# Disclaimer:
+# Notice:
 - This is a Beta Version
 - Commercial use is not allowed
 
