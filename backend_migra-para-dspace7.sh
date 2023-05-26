@@ -86,7 +86,7 @@ export URL_BASE=https://repo1.maven.org/maven2/org/apache/lucene
 export DEST_FOLDER=./dspace-install-dir/solr-conversion-files/libs
 
 
-for version in 5 6 7 8
+for version in 8
 do
    echo "Atualizando indices Solr para versão ${version}... (aguarde)"
    docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
