@@ -79,9 +79,6 @@ services:
     working_dir: /var/solr/data
     volumes:
     # Mount our local Solr core configs so that they are available as Solr configsets on container
-    - ../../dspace-install-dir/solr/authority:/opt/solr/server/solr/configsets/authority
-    - ../../dspace-install-dir/solr/oai:/opt/solr/server/solr/configsets/oai
-    - ../../dspace-install-dir/solr/search:/opt/solr/server/solr/configsets/search
     - ../../dspace-install-dir/solr/statistics:/opt/solr/server/solr/configsets/statistics
     # Keep Solr data directory between reboots
     - solr_data:/var/solr/data
