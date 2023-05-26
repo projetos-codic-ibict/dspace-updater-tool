@@ -26,6 +26,7 @@ cp -r $DSPACE_INSTALL_DIR/config dspace-install-dir
 cp -r $DSPACE_INSTALL_DIR/solr dspace-install-dir
 cp -r $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
 
+
 #########
 # Backend
 #########
@@ -79,6 +80,8 @@ echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_POR
 
 
 mkdir -p ./dspace-install-dir/solr-conversion-files/libs
+cp ./luceneupgrader.jar ./dspace-install-dir/solr-conversion-files/libs
+
 export URL_BASE=https://repo1.maven.org/maven2/org/apache/lucene
 export DEST_FOLDER=./dspace-install-dir/solr-conversion-files/libs
 
@@ -95,17 +98,17 @@ docker run --rm -e $URL_BASE:URL_BASE -e $DEST_FOLDER:DEST_FOLDER -v $(pwd):/unz
  && curl $URL_BASE/lucene-backward-codecs/8.11.1/lucene-backward-codecs-8.11.1.jar -o $DEST_FOLDER/back-lucene-core-8.jar -L
 
 
-for version in 4 5 6 7 8
+for version in 5 6 7 8
 do
    echo "Atualizando indices Solr para versão ${version}... (aguarde)"
    docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
-      java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/authority/data/index
+      java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/authority/data/index
    docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
-      java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/oai/data/index
+       java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/oai/data/index
    docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
-      java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/search/data/index
+       java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/search/data/index
    docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
-      java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/statistics/data/index
+       java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/statistics/data/index
 done
 
 docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
