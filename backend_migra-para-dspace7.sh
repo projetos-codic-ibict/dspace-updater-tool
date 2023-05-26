@@ -79,18 +79,18 @@ echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PO
 echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 
 
-mkdir -p ./dspace-install-dir/solr-conversion-files/libs
-cp ./luceneupgrader.jar ./dspace-install-dir/solr-conversion-files/libs
-
-export URL_BASE=https://repo1.maven.org/maven2/org/apache/lucene
-export DEST_FOLDER=./dspace-install-dir/solr-conversion-files/libs
-
-
-for version in 8
-do
-   echo "Atualizando indices Solr para versão ${version}... (aguarde)"
-       java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/statistics/data/index ${version}
-done
+#mkdir -p ./dspace-install-dir/solr-conversion-files/libs
+#cp ./luceneupgrader.jar ./dspace-install-dir/solr-conversion-files/libs
+#
+#export URL_BASE=https://repo1.maven.org/maven2/org/apache/lucene
+#export DEST_FOLDER=./dspace-install-dir/solr-conversion-files/libs
+#
+#
+#for version in 8
+#do
+#   echo "Atualizando indices Solr para versão ${version}... (aguarde)"
+#       java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/statistics/data/index ${version}
+#done
 
 docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
