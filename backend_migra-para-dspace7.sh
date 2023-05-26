@@ -89,13 +89,6 @@ export DEST_FOLDER=./dspace-install-dir/solr-conversion-files/libs
 for version in 8
 do
    echo "Atualizando indices Solr para versão ${version}... (aguarde)"
-   docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
-      java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/authority/data/index ${version}
-   docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
-       java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/oai/data/index ${version}
-   docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
-       java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/search/data/index ${version}
-   docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
        java -jar ./dspace-install-dir/solr-conversion-files/libs/luceneupgrader.jar upgrade ./dspace-install-dir/solr/statistics/data/index ${version}
 done
 
