@@ -1,4 +1,4 @@
-# Migrador de versões antigas do DSpace para versão 7
+# DSpace upgrade tool (versions 4, 5, 6) to DSpace 7
 
 # Notice:
 - This is a Beta Version
@@ -10,8 +10,7 @@ Autor: Márcio Gurgel (marcio.rga@gmail.com)
 
 - Instale os comandos "docker" e "docker compose" no seu servidor;
 - Gere um dump do banco de dados (PostgreSQL) com o comando `pg_dump`. O nome do arquivo deve ser `dump.sql` e deve ser colocado no diretório `dump-postgres`;
-  - Comando de exemplo para geração do dump: 
-  
+  - Comando de exemplo para geração do dump:
     `pg_dump --dbname=postgresql://dspace:dspace@192.169.5.126:5005/dspace > dump.sql`
 - Copie o diretório de instalação do DSpace antigo para o servidor onde o DSpace 7 irá rodar. Os diretórios obrigatórios são: config, assetstore e solr.
 - Preencha o arquivo `variaveis-para-atualizacao.properties` .
@@ -22,6 +21,11 @@ Autor: Márcio Gurgel (marcio.rga@gmail.com)
 - Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor;
 - Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `variaveis-para-atualizacao.properties`.
 
+
+## Informações adicionais sobre a instalação
+
+- O diretório de instalação do DSpace será [DSPACE_UPGRADE_TOOL]/dspace-install-dir, considere esta pasta para backup;
+- O banco de dados pode receber backup pelo comando: ```docker exec -t dspace7db pg_dumpall -c -U postgres > [DEST_DIR]/dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql```
 
 ## Problemas comuns
 
