@@ -79,7 +79,7 @@ services:
     working_dir: /var/solr/data
     volumes:
     # Mount our local Solr core configs so that they are available as Solr configsets on container
-    - ../../dspace-install-dir/solr/statistics:/opt/solr/server/solr/configsets/statistics
+    - ../../dspace-install-dir/solr/statistics/data/index:/opt/solr/server/solr/configsets/statistics/data/index
     # Keep Solr data directory between reboots
     - solr_data:/var/solr/data
     # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
