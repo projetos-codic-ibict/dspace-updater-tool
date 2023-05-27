@@ -25,7 +25,7 @@ Autor: Márcio Gurgel (marcio.rga@gmail.com)
 ## Informações adicionais sobre a instalação
 
 - O diretório de instalação do DSpace será [DSPACE_UPGRADE_TOOL]/dspace-install-dir, considere esta pasta para backup;
-- O banco de dados pode receber backup pelo comando: ```docker exec -t dspace7db pg_dumpall -c -U postgres > [DEST_DIR]/dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql```
+- O banco de dados pode receber backup pelo comando: ```docker exec -t dspace7db pg_dump -c -U postgres dspace > [DEST_DIR]/dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql```
 
 ## Problemas comuns
 
