@@ -97,8 +97,6 @@ services:
       cp -r -u /opt/solr/server/solr/configsets/oai/* oai
       precreate-core search /opt/solr/server/solr/configsets/search
       cp -r -u /opt/solr/server/solr/configsets/search/* search
-      precreate-core statistics /opt/solr/server/solr/configsets/statistics
-      cp -r -u /opt/solr/server/solr/configsets/statistics/* statistics
       exec solr -f
 volumes:
   solr_data:
