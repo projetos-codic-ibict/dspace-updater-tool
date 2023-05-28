@@ -17,8 +17,8 @@ services:
       - TZ=America/Sao_Paulo
     networks:
       - dspacenet
-#    volumes:
-#      -  ../../postgres-data:/var/lib/postgresql/data
+  #    volumes:
+  #      -  ../../postgres-data:/var/lib/postgresql/data
 
   dspace7:
     container_name: dspace7
@@ -33,37 +33,37 @@ services:
     networks:
       - dspacenet
     ports:
-    - published: 8080 #Port for tomcat
-      target: 8080
+      - published: 8080 #Port for tomcat
+        target: 8080
     stdin_open: true
     tty: true
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-    # Keep DSpace assetstore directory between reboots
-    - ../../dspace-install-dir:/dspace
-    - m2:/root/.m2
+      # Keep DSpace assetstore directory between reboots
+      - ../../dspace-install-dir:/dspace
+      - m2:/root/.m2
     entrypoint:
-    - /bin/bash
-    - '-c'
-    - |
-      rm -rf /dspace/config/spring
-      rm -rf /dspace/lib
-      rm -rf /dspace/webapps
-      cp -r /dspace-tmp/* /dspace
-      ls -lsah /dspace/webapps
-      /dspace/bin/dspace database migrate ignored
-      mkdir /dspace/config/temp
-      cp /dspace/config/item-submission.xml /dspace/config/temp
-      cp /dspace/config/input-forms.xml /dspace/config/temp
-      rm /dspace/config/spring/api/bte.xml
-      rm /dspace/config/GeoLiteCity.dat
-      /dspace/bin/dspace submission-forms-migrate -s /dspace/config/temp/item-submission.xml -f /dspace/config/temp/input-forms.xml
-      mv /dspace/config/item-submission.xml.migrated /dspace/config/item-submission.xml
-      mv /dspace/config/submission-forms.xml.migrated /dspace/config/submission-forms.xml
-      sed -i 's/<step id="collection"\/>//g' /dspace/config/item-submission.xml
-      ls -lsah /dspace/webapps
-      catalina.sh run
+      - /bin/bash
+      - '-c'
+      - |
+        rm -rf /dspace/config/spring
+        rm -rf /dspace/lib
+        rm -rf /dspace/webapps
+        cp -r /dspace-tmp/* /dspace
+        ls -lsah /dspace/webapps
+        /dspace/bin/dspace database migrate ignored
+        mkdir /dspace/config/temp
+        cp /dspace/config/item-submission.xml /dspace/config/temp
+        cp /dspace/config/input-forms.xml /dspace/config/temp
+        rm /dspace/config/spring/api/bte.xml
+        rm /dspace/config/GeoLiteCity.dat
+        /dspace/bin/dspace submission-forms-migrate -s /dspace/config/temp/item-submission.xml -f /dspace/config/temp/input-forms.xml
+        mv /dspace/config/item-submission.xml.migrated /dspace/config/item-submission.xml
+        mv /dspace/config/submission-forms.xml.migrated /dspace/config/submission-forms.xml
+        sed -i 's/<step id="collection"\/>//g' /dspace/config/item-submission.xml
+        ls -lsah /dspace/webapps
+        catalina.sh run
   # DSpace Solr container
   dspace7solr:
     container_name: dspace7solr
@@ -71,35 +71,38 @@ services:
     image: solr:8.11-slim
     networks:
       - dspacenet
-#    ports:
-#    - published: 8983
-#      target: 8983
+    #    ports:
+    #    - published: 8983
+    #      target: 8983
     stdin_open: true
     tty: true
     working_dir: /var/solr/data
     volumes:
-    # Mount our local Solr core configs so that they are available as Solr configsets on container
-#    - ../../dspace-install-dir/solr/statistics:/opt/solr/server/solr/configsets/
-    # Keep Solr data directory between reboots
-    - solr_data:/var/solr/data
+      # Mount our local Solr core configs so that they are available as Solr configsets on container
+      - ./dspace/solr/authority:/opt/solr/server/solr/configsets/authority
+      - ./dspace/solr/oai:/opt/solr/server/solr/configsets/oai
+      - ./dspace/solr/search:/opt/solr/server/solr/configsets/search
+      - ./dspace/solr/statistics:/opt/solr/server/solr/configsets/statistics
+      # Keep Solr data directory between reboots
+      - solr_data:/var/solr/data
     # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
     # * First, run precreate-core to create the core (if it doesn't yet exist). If exists already, this is a no-op
     # * Second, copy updated configs from mounted configsets to this core. If it already existed, this updates core
     #   to the latest configs. If it's a newly created core, this is a no-op.
     entrypoint:
-    - /bin/bash
-    - '-c'
-    - |
-      init-var-solr
-      precreate-core authority /opt/solr/server/solr/configsets/authority
-      cp -r -u /opt/solr/server/solr/configsets/authority/* authority
-      precreate-core oai /opt/solr/server/solr/configsets/oai
-      cp -r -u /opt/solr/server/solr/configsets/oai/* oai
-      precreate-core search /opt/solr/server/solr/configsets/search
-      cp -r -u /opt/solr/server/solr/configsets/search/* search
-      precreate-core statistics /opt/solr/server/solr/configsets/statistics
-      cp -r -u /opt/solr/server/solr/configsets/statistics/* statistics
-      exec solr -f
+      - /bin/bash
+      - '-c'
+      - |
+        init-var-solr
+        precreate-core authority /opt/solr/server/solr/configsets/authority
+        cp -r -u /opt/solr/server/solr/configsets/authority/* authority
+        precreate-core oai /opt/solr/server/solr/configsets/oai
+        cp -r -u /opt/solr/server/solr/configsets/oai/* oai
+        precreate-core search /opt/solr/server/solr/configsets/search
+        cp -r -u /opt/solr/server/solr/configsets/search/* search
+        precreate-core statistics /opt/solr/server/solr/configsets/statistics
+        cp -r -u /opt/solr/server/solr/configsets/statistics/* statistics
+        exec solr -f
 volumes:
   solr_data:
   m2:
