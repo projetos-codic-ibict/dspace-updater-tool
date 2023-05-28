@@ -80,7 +80,6 @@ echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_POR
 
 
 mkdir -p ./dspace-install-dir/solr-conversion-files/libs
-cp ./luceneupgrader.jar ./dspace-install-dir/solr-conversion-files/libs
 
 export URL_BASE=https://repo1.maven.org/maven2/org/apache/lucene
 export DEST_FOLDER=./dspace-install-dir/solr-conversion-files/libs
