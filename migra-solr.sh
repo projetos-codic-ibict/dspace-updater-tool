@@ -1,29 +1,51 @@
 #!/bin/bash
 
-mkdir -p ./dspace-install-dir/solr-conversion-files/libs
-export URL_BASE=https://repo1.maven.org/maven2/org/apache/lucene
-export DEST_FOLDER=./dspace-install-dir/solr-conversion-files/libs
-
-docker run --rm -e $URL_BASE:URL_BASE -e $DEST_FOLDER:DEST_FOLDER -v $(pwd):/unzip -w /unzip kubeless/unzip \
- && curl $URL_BASE/lucene-core/4.10.4/lucene-core-4.10.4.jar -o $DEST_FOLDER/lucene-core-4.jar -L \
- && curl $URL_BASE/lucene-backward-codecs/4.10.4/lucene-backward-codecs-4.10.4.jar -o $DEST_FOLDER/back-lucene-core-4.jar -L \
- && curl $URL_BASE/lucene-core/5.5.4/lucene-core-5.5.4.jar -o $DEST_FOLDER/lucene-core-5.jar -L \
- && curl $URL_BASE/lucene-backward-codecs/5.5.4/lucene-backward-codecs-5.5.4.jar -o $DEST_FOLDER/back-lucene-core-5.jar -L \
- && curl $URL_BASE/lucene-core/6.6.0/lucene-core-6.6.0.jar -o $DEST_FOLDER/lucene-core-6.jar -L \
- && curl $URL_BASE/lucene-backward-codecs/6.6.0/lucene-backward-codecs-6.6.0.jar -o $DEST_FOLDER/back-lucene-core-6.jar -L \
- && curl $URL_BASE/lucene-core/7.7.0/lucene-core-7.7.0.jar -o $DEST_FOLDER/lucene-core-7.jar -L \
- && curl $URL_BASE/lucene-backward-codecs/7.7.0/lucene-backward-codecs-7.7.0.jar -o $DEST_FOLDER/back-lucene-core-7.jar -L \
- && curl $URL_BASE/lucene-core/8.11.1/lucene-core-8.11.1.jar -o $DEST_FOLDER/lucene-core-8.jar -L \
- && curl $URL_BASE/lucene-backward-codecs/8.11.1/lucene-backward-codecs-8.11.1.jar -o $DEST_FOLDER/back-lucene-core-8.jar -L
+cp ./dockerfiles/old-solr-xml.xml ./dspace-install-dir/webapps/solr/WEB-INF/web.xml
 
 
-for version in 4 5 6 7 8
+rm ./tmp/*
+docker pull tomcat:8.5.89-jdk8-temurin-jammy
+docker rm -f tomcatsolr || true
+
+
+echo "Setting up a Tomcat with the old Solr"
+docker run -d -p 8080:8080 --network=solrexport --name tomcatsolr -v $(pwd)/dspace-install-dir:/dspace -v $(pwd)/dspace-install-dir/webapps/solr:/usr/local/tomcat/webapps/solr -w /dspace tomcat:8.5.89-jdk8-temurin-jammy
+
+
+docker rm -f dspace7solr2
+
+echo "Starting the new solr"
+docker compose -f docker-solr.yml up --build -d
+
+
+echo "Generating the solr dump"
+### Todo: use docker image for curl, attention with: acces to localhost inside the container
+##curl 'http://localhost:8080/solr/statistics/select?q=*%3A*&rows=99999999&wt=csv&indent=true&&fl=owner%2Csubmitter%2CisBot%2Cstatistics_type%2CpreviousWorkflowStep%2CworkflowItemId%2Cip%2Cdns%2CworkflowStep%2CuserAgent%2Ctype%2Cactor%2Creferrer%2Cuid%2CowningItem%2CbundleName%2Cid%2Ctime%2Cepersonid%2CowningColl%2CowningComm' -o ./tmp/export.csv -L
+
+docker run --rm -v $(pwd):/unzip --network=solrexport -w /unzip kubeless/unzip \
+   && curl curl 'http://solrexport:8080/solr/statistics/select?q=*%3A*&rows=99999999&wt=csv&indent=true&&fl=owner%2Csubmitter%2CisBot%2Cstatistics_type%2CpreviousWorkflowStep%2CworkflowItemId%2Cip%2Cdns%2CworkflowStep%2CuserAgent%2Ctype%2Cactor%2Creferrer%2Cuid%2CowningItem%2CbundleName%2Cid%2Ctime%2Cepersonid%2CowningColl%2CowningComm' -o ./tmp/export.csv -L
+
+
+echo "Ending the old solr"
+docker rm -f tomcatsolr
+
+split -l 100000 ./tmp/export.csv ./tmp/solr_
+
+docker exec dspace7solr2 solr create -c statistics
+
+echo "Handling the solr dump files"
+for file in ./tmp/solr_*
 do
-   echo "Atualizando indices Solr para versão ${version}... (aguarde)"
-   docker run --rm -e $version:version -v $(pwd):/install-dir -w /install-dir adoptopenjdk/openjdk11 \
-     && java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/authority/data/index \
-     && java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/oai/data/index \
-     && java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/search/data/index \
-     && java -cp ./dspace-install-dir/solr-conversion-files/libs/lucene-core-${version}.jar:./dspace-install-dir/solr-conversion-files/libs/back-lucene-core-${version}.jar org.apache.lucene.index.IndexUpgrader -delete-prior-commits ./dspace-install-dir/solr/statistics/data/index
+	echo "Importing the solr dump file: ${file##*/}"
+  if  [ "${file##*/}" != "solr_aa" ]; then
+    echo "Adding header to file ${file##*/}"
+    docker run --rm -e PARCIAL_SOLR=${file} -v $(pwd)/tmp:/tmp -w /tmp intel/qat-crypto-base:qatsw-ubuntu \
+      sed -i '1s/^/owner,submitter,isBot,statistics_type,previousWorkflowStep,workflowItemId,ip,dns,workflowStep,userAgent,type,actor,referrer,uid,owningItem,bundleName,id,time,epersonid,owningColl,owningComm \n/' ${file##*/}
+  fi
+
+  docker run --rm -e file=${file} -v $(pwd):/unzip --network=solrexport -w /unzip kubeless/unzip \
+     && curl 'http://localhost:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
+
+#  curl 'http://localhost:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
 done
 

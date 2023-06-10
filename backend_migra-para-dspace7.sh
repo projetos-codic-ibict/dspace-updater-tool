@@ -84,6 +84,10 @@ mkdir -p ./dspace-install-dir/solr-conversion-files/libs
 export URL_BASE=https://repo1.maven.org/maven2/org/apache/lucene
 export DEST_FOLDER=./dspace-install-dir/solr-conversion-files/libs
 
+
+
+### Solr
+
 docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
 sleep 10
