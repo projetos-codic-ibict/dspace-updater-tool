@@ -25,6 +25,7 @@ echo "Copiando arquivos do DSpace antigo"
 cp -r $DSPACE_INSTALL_DIR/config dspace-install-dir
 cp -r $DSPACE_INSTALL_DIR/solr dspace-install-dir
 cp -r $DSPACE_INSTALL_DIR/assetstore dspace-install-dir
+cp -r $DSPACE_INSTALL_DIR/webapps dspace-install-dir
 
 
 #########
@@ -78,13 +79,31 @@ echo "db.url = jdbc:postgresql://dspace7db.dspacenet:5432/dspace" >> source/DSpa
 echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 
+### FIM Inicio
 
 ./migra-solr.sh
 
+### FIM Solr
 
-### Solr
+docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
-docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up dspace7db dspace7  --build -d
+sleep 10
+
+docker exec dspace7solr precreate-core authority
+docker exec dspace7solr precreate-core oai
+docker exec dspace7solr precreate-core search
+docker exec dspace7solr precreate-core statistics
+docker exec dspace7solr exec solr -f
+
+for file in ./tmp/solr_*
+do
+  echo "Sending file ${file##*/} to Solr..."
+
+  docker run --rm --network="dspacenet" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
+done
+
+#rm ./tmp/*
+#docker rm -f tomcatsolr || true
 
 
 #docker exec -it dspace7 /dspace/bin/dspace filter-media &
