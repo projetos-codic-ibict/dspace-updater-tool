@@ -71,20 +71,18 @@ services:
     image: solr:8.11-slim
     networks:
       - dspacenet
-    #    ports:
-    #    - published: 8983
-    #      target: 8983
+    ports:
+    - "127.0.0.1:8983:8983"
     stdin_open: true
     tty: true
     working_dir: /var/solr/data
-    volumes:
-      # Mount our local Solr core configs so that they are available as Solr configsets on container
-      - ./dspace/solr/authority:/opt/solr/server/solr/configsets/authority
-      - ./dspace/solr/oai:/opt/solr/server/solr/configsets/oai
-      - ./dspace/solr/search:/opt/solr/server/solr/configsets/search
-      - ./dspace/solr/statistics:/opt/solr/server/solr/configsets/statistics
+#    volumes:
+#      - ./dspace/solr/authority:/opt/solr/server/solr/configsets/authority
+#      - ./dspace/solr/oai:/opt/solr/server/solr/configsets/oai
+#      - ./dspace/solr/search:/opt/solr/server/solr/configsets/search
+#      - ./dspace/solr/statistics:/opt/solr/server/solr/configsets/statistics
       # Keep Solr data directory between reboots
-      - solr_data:/var/solr/data
+#      - solr_data:/var/solr/data
     # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
     # * First, run precreate-core to create the core (if it doesn't yet exist). If exists already, this is a no-op
     # * Second, copy updated configs from mounted configsets to this core. If it already existed, this updates core
@@ -100,8 +98,6 @@ services:
         cp -r -u /opt/solr/server/solr/configsets/oai/* oai
         precreate-core search /opt/solr/server/solr/configsets/search
         cp -r -u /opt/solr/server/solr/configsets/search/* search
-        precreate-core statistics /opt/solr/server/solr/configsets/statistics
-        cp -r -u /opt/solr/server/solr/configsets/statistics/* statistics
         exec solr -f
 volumes:
   solr_data:
