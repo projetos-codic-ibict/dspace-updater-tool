@@ -89,11 +89,17 @@ docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --bui
 
 sleep 10
 
+docker exec dspace7solr mkdir -p /var/solr/data/{search,authority,oai,search,statistics}
+docker exec dspace7solr solr create -c authority
+docker exec dspace7solr solr create -c oai
+docker exec dspace7solr solr create -c search
+docker exec dspace7solr solr create -c statistics
+
 docker exec dspace7solr precreate-core authority
 docker exec dspace7solr precreate-core oai
 docker exec dspace7solr precreate-core search
 docker exec dspace7solr precreate-core statistics
-docker exec dspace7solr exec solr -f
+#docker exec dspace7solr exec solr -f
 
 for file in ./tmp/solr_*
 do
