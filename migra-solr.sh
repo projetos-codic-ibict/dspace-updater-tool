@@ -3,7 +3,7 @@
 cp ./dockerfiles/old-solr-xml.xml ./dspace-install-dir/webapps/solr/WEB-INF/web.xml
 
 
-rm ./tmp/*
+rm -rf ./tmp/*
 docker pull tomcat:8.5.89-jdk8-temurin-jammy
 docker rm -f tomcatsolr || true
 docker rm -f dspace7solr || true

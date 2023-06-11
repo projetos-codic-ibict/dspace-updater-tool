@@ -78,11 +78,11 @@ services:
     tty: true
     working_dir: /var/solr/data
     volumes:
-      # Mount our local Solr core configs so that they are available as Solr configsets on container
-      - ../dspace-install-dir/solr/authority/conf:/opt/solr/server/solr/configsets/authority/conf
-      - ../dspace-install-dir/solr/oai/conf/:/opt/solr/server/solr/configsets/oai/conf
-      - ../dspace-install-dir/solr/search/conf:/opt/solr/server/solr/configsets/search/conf
-      - ../dspace-install-dir/solr/statistics/conf:/opt/solr/server/solr/configsets/statistics/conf
+      # Mo/..unt our local Solr core configs so that they are available as Solr configsets on container
+      - ../../dspace-install-dir/solr/authority/conf:/opt/solr/server/solr/configsets/authority/conf
+      - ../../dspace-install-dir/solr/oai/conf/:/opt/solr/server/solr/configsets/oai/conf
+      - ../../dspace-install-dir/solr/search/conf:/opt/solr/server/solr/configsets/search/conf
+      - ../../dspace-install-dir/solr/statistics/conf:/opt/solr/server/solr/configsets/statistics/conf
       # Keep Solr data directory between reboots
       - solr_data:/var/solr/data
     # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
