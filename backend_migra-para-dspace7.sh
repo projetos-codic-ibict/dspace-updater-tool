@@ -79,18 +79,13 @@ echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PO
 echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 
 
-mkdir -p ./dspace-install-dir/solr-conversion-files/libs
-
-export URL_BASE=https://repo1.maven.org/maven2/org/apache/lucene
-export DEST_FOLDER=./dspace-install-dir/solr-conversion-files/libs
-
+./migra-solr.sh
 
 
 ### Solr
 
-docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
+docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up dspace7db dspace7  --build -d
 
-sleep 10
 
-docker exec -it dspace7 /dspace/bin/dspace filter-media &
+#docker exec -it dspace7 /dspace/bin/dspace filter-media &
 
