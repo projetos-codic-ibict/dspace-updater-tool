@@ -64,34 +64,51 @@ services:
         sed -i 's/<step id="collection"\/>//g' /dspace/config/item-submission.xml
         ls -lsah /dspace/webapps
         catalina.sh run
+
   # DSpace Solr container
   dspace7solr:
     container_name: dspace7solr
     # Uses official Solr image at https://hub.docker.com/_/solr/
     image: solr:8.11-slim
     networks:
-      - dspacenet
+      dspacenet:
     ports:
-    - "127.0.0.1:8983:8983"
+      - "127.0.0.1:8983:8983"
     stdin_open: true
     tty: true
     working_dir: /var/solr/data
     volumes:
+      # Mount our local Solr core configs so that they are available as Solr configsets on container
+      - ../dspace-install-dir/solr/authority/conf:/opt/solr/server/solr/configsets/authority/conf
+      - ../dspace-install-dir/solr/oai/conf/:/opt/solr/server/solr/configsets/oai/conf
+      - ../dspace-install-dir/solr/search/conf:/opt/solr/server/solr/configsets/search/conf
+      - ../dspace-install-dir/solr/statistics/conf:/opt/solr/server/solr/configsets/statistics/conf
       # Keep Solr data directory between reboots
       - solr_data:/var/solr/data
+    # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
+    # * First, run precreate-core to create the core (if it doesn't yet exist). If exists already, this is a no-op
+    # * Second, copy updated configs from mounted configsets to this core. If it already existed, this updates core
+    #   to the latest configs. If it's a newly created core, this is a no-op.
     entrypoint:
       - /bin/bash
       - '-c'
       - |
         init-var-solr
-        precreate-core authority
-        precreate-core oai
-        precreate-core search
-        precreate-core statistics
+        precreate-core authority /opt/solr/server/solr/configsets/authority
+        cp -r -u /opt/solr/server/solr/configsets/authority/* authority
+        precreate-core oai /opt/solr/server/solr/configsets/oai
+        cp -r -u /opt/solr/server/solr/configsets/oai/* oai
+        precreate-core search /opt/solr/server/solr/configsets/search
+        cp -r -u /opt/solr/server/solr/configsets/search/* search
+        precreate-core statistics /opt/solr/server/solr/configsets/statistics
+        cp -r -u /opt/solr/server/solr/configsets/statistics/* statistics
         exec solr -f
+
+
 volumes:
   solr_data:
   m2:
+
 
 networks:
   dspacenet:
