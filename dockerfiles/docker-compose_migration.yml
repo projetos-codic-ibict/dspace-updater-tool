@@ -39,6 +39,7 @@ services:
     tty: true
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    user: "${UID}"
     volumes:
       # Keep DSpace assetstore directory between reboots
       - ../../dspace-install-dir:/dspace
@@ -78,13 +79,12 @@ services:
     tty: true
     working_dir: /var/solr/data
     volumes:
-      # Mo/..unt our local Solr core configs so that they are available as Solr configsets on container
       - ../../dspace-install-dir/solr/authority/conf:/opt/solr/server/solr/configsets/authority/conf
       - ../../dspace-install-dir/solr/oai/conf/:/opt/solr/server/solr/configsets/oai/conf
       - ../../dspace-install-dir/solr/search/conf:/opt/solr/server/solr/configsets/search/conf
       - ../../dspace-install-dir/solr/statistics/conf:/opt/solr/server/solr/configsets/statistics/conf
       # Keep Solr data directory between reboots
-      - solr_data:/var/solr/data
+#      - solr_data:/var/solr/data
     # Initialize all DSpace Solr cores using the mounted local configsets (see above), then start Solr
     # * First, run precreate-core to create the core (if it doesn't yet exist). If exists already, this is a no-op
     # * Second, copy updated configs from mounted configsets to this core. If it already existed, this updates core

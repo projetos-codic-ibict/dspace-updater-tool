@@ -1,7 +1,8 @@
 #/bin/bash
 
-echo "Informe o usuário root para remover o diretório de instalação do DSpace 7 (um novo será recriado)"
-sudo rm -rf ./dspace-install-dir/*
+
+rm -rf ./tmp/*
+rm -rf ./dspace-install-dir/*
 
 echo "Removendo containers antigos"
 rm -rf ./source/DSpace-dspace-7.5
