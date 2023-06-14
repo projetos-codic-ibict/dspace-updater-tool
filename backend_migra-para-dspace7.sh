@@ -17,6 +17,9 @@ docker pull alpine/git
 
 export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12)
 
+export UID=$(id -u)
+export GID=$(id -g)
+
 ##########
 ## Diretório de instalação
 ##########
@@ -79,34 +82,47 @@ echo "db.url = jdbc:postgresql://dspace7db.dspacenet:5432/dspace" >> source/DSpa
 echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 
+
+mkdir ~/.m2 >> true
+docker run -v ~/.m2:/var/maven/.m2 -v "$(pwd)/source/DSpace-dspace-7.5":/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -u ${UID} -e MAVEN_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 mvn -q --no-transfer-progress -Duser.home=/var/maven clean package -P dspace-oai,\!dspace-sword,\!dspace-swordv2,\!dspace-rdf,\!dspace-iiif
+
+### TODO: give ant a better place
+docker run -v ~/.m2:/var/maven/.m2 -v $(pwd)/dspace-install-dir:/dspace -v $(pwd)/source/DSpace-dspace-7.5:/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -u ${UID} -e MAVEN_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 \
+    wget "https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz" \
+    && tar -xzf apache-ant-1.10.12-bin.tar.gz \
+    && chmod 775 ./apache-ant-1.10.12/bin/ant \
+    && ls -lsah \
+    && cd ./dspace/target/dspace-installer \
+    && ./apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps \
+    && rm -rf ../../apache-ant-* \
+    && mvn clean
+
+
+docker run -v ~/.m2:/var/maven/.m2  -v $(pwd)/dspace-install-dir:/dspace -v "$(pwd)/source/DSpace-dspace-7.5":/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -u ${UID} -e MAVEN_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 \
+    wget "https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz" \
+    && tar -xzf apache-ant-1.10.12-bin.tar.gz \
+    && chmod 775 ./apache-ant-1.10.12/bin/ant \
+    && cd ./dspace/target/dspace-installer \
+    && ./apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps \
+    && cd ../../ \
+    && rm -rf apache-ant-*
+
 ### FIM Inicio
 
-./migra-solr.sh
+#./migra-solr.sh
 
 ### FIM Solr
 
-docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
-
-sleep 10
-
-docker exec dspace7solr mkdir -p /var/solr/data/{search,authority,oai,search,statistics}
-docker exec dspace7solr solr create -c authority
-docker exec dspace7solr solr create -c oai
-docker exec dspace7solr solr create -c search
-docker exec dspace7solr solr create -c statistics
-
-docker exec dspace7solr precreate-core authority
-docker exec dspace7solr precreate-core oai
-docker exec dspace7solr precreate-core search
-docker exec dspace7solr precreate-core statistics
-#docker exec dspace7solr exec solr -f
-
-for file in ./tmp/solr_*
-do
-  echo "Sending file ${file##*/} to Solr..."
-
-  docker run --rm --network="dspacenet" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
-done
+#docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
+#
+#sleep 20
+#
+#
+#for file in ./tmp/solr_*
+#do
+#  echo "Sending file ${file##*/} to Solr..."
+#  docker run --rm --network="dspacenet" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
+#done
 
 #rm ./tmp/*
 #docker rm -f tomcatsolr || true
