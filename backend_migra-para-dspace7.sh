@@ -7,7 +7,7 @@ docker pull intel/qat-crypto-base:qatsw-ubuntu
 docker pull kubeless/unzip
 docker pull alpine/git
 
-export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12)
+export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12 |  sed -e "s/\///g")
 
 
 ##########
