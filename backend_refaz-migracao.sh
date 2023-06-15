@@ -1,11 +1,11 @@
 #/bin/bash
 
-rm -rf ./tmp/*
+sudo rm -rf ./tmp/*
 
 sudo rm -rf ./dspace-install-dir/*
 
 echo "Removendo containers antigos"
-rm -rf ./source/DSpace-dspace-7.5
+sudo rm -rf ./source/DSpace-dspace-7.5
 rm dspace-7.5.zip || true > /dev/null 2>&1
 
 docker rm -f dspace7 || true > /dev/null 2>&1
