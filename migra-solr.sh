@@ -24,7 +24,7 @@ echo "Generating the solr dump"
 docker run --rm --net oldsolr -v $(pwd):/unzip  --name downloadsolrdata -w /unzip kubeless/unzip curl 'http://tomcatsolr:8080/solr/statistics/select?q=*%3A*&rows=99999999&wt=csv&indent=true&&fl=owner%2Csubmitter%2CisBot%2Cstatistics_type%2CpreviousWorkflowStep%2CworkflowItemId%2Cip%2Cdns%2CworkflowStep%2CuserAgent%2Ctype%2Cactor%2Creferrer%2Cuid%2CowningItem%2CbundleName%2Cid%2Ctime%2Cepersonid%2CowningColl%2CowningComm' -o ./tmp/export.csv -L
 
 
-split -l 100000 ./tmp/export.csv ./tmp/solr_
+sudo split -l 100000 ./tmp/export.csv ./tmp/solr_
 
 echo "Handling the solr dump files"
 for file in ./tmp/solr_*
