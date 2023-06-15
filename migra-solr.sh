@@ -31,7 +31,7 @@ do
   if  [ "${file##*/}" != "solr_aa" ]; then
     echo "Adding header to file ${file##*/}"
     docker run --rm --user ${UID}  -e PARCIAL_SOLR=${file} -v $(pwd)/tmp:/tmp -w /tmp intel/qat-crypto-base:qatsw-ubuntu \
-      sed -i '1s/^/owner,submitter,isBot,statistics_type,previousWorkflowStep,workflowItemId,ip,dns,workflowStep,userAgent,type,actor,referrer,uid,owningItem,bundleName,id,time,epersonid,owningColl,owningComm \n/' ${file##*/}
+      sed -i '1s/^/owner,submitter,isBot,statistics_type,previousWorkflowStep,workflowItemId,ip,dns,workflowStep,userAgent,type,actor,referrer,uid,owningItem,bundleName,id,time,epersonid,owningColl,owningComm\n/' ${file##*/}
   fi
 done
 

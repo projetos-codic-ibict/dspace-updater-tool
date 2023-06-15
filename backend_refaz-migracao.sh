@@ -1,7 +1,8 @@
 #/bin/bash
 
-#rm -rf ./tmp/*
-rm -rf ./dspace-install-dir/*
+rm -rf ./tmp/*
+
+sudo rm -rf ./dspace-install-dir/*
 
 echo "Removendo containers antigos"
 rm -rf ./source/DSpace-dspace-7.5
