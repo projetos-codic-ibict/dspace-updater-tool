@@ -1,7 +1,6 @@
 #/bin/bash
 
-
-rm -rf ./tmp/*
+#rm -rf ./tmp/*
 rm -rf ./dspace-install-dir/*
 
 echo "Removendo containers antigos"

@@ -39,7 +39,6 @@ services:
     tty: true
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    user: "${UID}"
     volumes:
       # Keep DSpace assetstore directory between reboots
       - ../../dspace-install-dir:/dspace
@@ -48,11 +47,6 @@ services:
       - /bin/bash
       - '-c'
       - |
-        rm -rf /dspace/config/spring
-        rm -rf /dspace/lib
-        rm -rf /dspace/webapps
-        cp -r /dspace-tmp/* /dspace
-        ls -lsah /dspace/webapps
         /dspace/bin/dspace database migrate ignored
         mkdir /dspace/config/temp
         cp /dspace/config/item-submission.xml /dspace/config/temp
@@ -63,7 +57,7 @@ services:
         mv /dspace/config/item-submission.xml.migrated /dspace/config/item-submission.xml
         mv /dspace/config/submission-forms.xml.migrated /dspace/config/submission-forms.xml
         sed -i 's/<step id="collection"\/>//g' /dspace/config/item-submission.xml
-        ls -lsah /dspace/webapps
+        ln -s /dspace/webapps/server /usr/local/tomcat/webapps/
         catalina.sh run
 
   # DSpace Solr container
