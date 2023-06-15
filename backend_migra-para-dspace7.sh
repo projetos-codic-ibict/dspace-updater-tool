@@ -1,10 +1,5 @@
 #/bin/bash
 
-#echo "Press CTRL+C to proceed."
-#trap "pkill -f 'sleep 1h'" INT
-#trap "set +x ; sleep 1h ; set -x" DEBUG
-
-
 source ./variaveis-para-atualizacao.properties
 
 
@@ -91,11 +86,6 @@ docker run -v ~/.m2:/var/maven/.m2 -v "$(pwd)/source/DSpace-dspace-7.5":/tmp/dsp
 docker run -v ~/.m2:/var/maven/.m2  -v $(pwd)/dspace-install-dir:/dspace  -v $(pwd)/source/DSpace-dspace-7.5:/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -u ${UID} -e MAVEN_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 /bin/bash -c "wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz && tar -xvzf apache-ant-1.10.12-bin.tar.gz && cd dspace/target/dspace-installer && ../../../apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps && cd ../../../ && rm -rf apache-ant-*"
 
 
-### FIM Inicio
-
-
-### FIM Solr
-
 docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
 sleep 20
@@ -109,7 +99,3 @@ done
 
 rm ./tmp/*
 docker rm -f tomcatsolr || true
-
-
-#docker exec -it dspace7 /dspace/bin/dspace filter-media &
-
