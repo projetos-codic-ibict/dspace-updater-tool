@@ -3,7 +3,7 @@
 cp ./dockerfiles/old-solr-xml.xml ./dspace-install-dir/webapps/solr/WEB-INF/web.xml
 
 
-rm -rf ./tmp/*
+#rm -rf ./tmp/*
 docker pull tomcat:8.5.89-jdk8-temurin-jammy
 docker rm -f tomcatsolr || true
 docker rm -f dspace7solr || true
@@ -20,7 +20,7 @@ timeout 20s grep -q ' Server startup in ' <(docker logs tomcatsolr --follow)
 echo "Generating the solr dump"
 #sleep 10000
 
-docker run --rm --net oldsolr --user ${UID}   -v $(pwd):/unzip  --name downloadsolrdata -w /unzip kubeless/unzip curl 'http://tomcatsolr:8080/solr/statistics/select?q=*%3A*&rows=99999999&wt=csv&indent=true&&fl=owner%2Csubmitter%2CisBot%2Cstatistics_type%2CpreviousWorkflowStep%2CworkflowItemId%2Cip%2Cdns%2CworkflowStep%2CuserAgent%2Ctype%2Cactor%2Creferrer%2Cuid%2CowningItem%2CbundleName%2Cid%2Ctime%2Cepersonid%2CowningColl%2CowningComm' -o ./tmp/export.csv -L
+docker run --rm --net oldsolr --user ${UID} -v $(pwd):/unzip  --name downloadsolrdata -w /unzip kubeless/unzip curl 'http://tomcatsolr:8080/solr/statistics/select?q=*%3A*&rows=99999999&wt=csv&indent=true&&fl=owner%2Csubmitter%2CisBot%2Cstatistics_type%2CpreviousWorkflowStep%2CworkflowItemId%2Cip%2Cdns%2CworkflowStep%2CuserAgent%2Ctype%2Cactor%2Creferrer%2Cuid%2CowningItem%2CbundleName%2Cid%2Ctime%2Cepersonid%2CowningColl%2CowningComm' -o ./tmp/export.csv -L
 
 
 split -l 100000 ./tmp/export.csv ./tmp/solr_

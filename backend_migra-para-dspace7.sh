@@ -1,15 +1,12 @@
 #/bin/bash
 
+#echo "Press CTRL+C to proceed."
+#trap "pkill -f 'sleep 1h'" INT
+#trap "set +x ; sleep 1h ; set -x" DEBUG
+
+
 source ./variaveis-para-atualizacao.properties
 
-# Este procedimento leva em torno de 30 minutos, o tempo pode veriar de acordo com o hardware utilizado
-# Certifique de que o seu servidor tenha ao menos o dobro de disco rígido disponível, quando comparado ao espaço utilizado
-# Certifique que seu servidor tenha ao menos 8GB de RAM
-# Editar arquivos não solicitados pode acarretar na falha de execução deste programa
-
-# Vantagens
-# Não exige que seu servidor tenha java (ou java atualizado), ant, maven
-# Não é instrusivo, toods recursos do seu dspace antigo serão copiados, com única exceção do diretório "assetstore"
 
 docker pull intel/qat-crypto-base:qatsw-ubuntu
 docker pull kubeless/unzip
@@ -17,8 +14,6 @@ docker pull alpine/git
 
 export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12)
 
-export UID=$(id -u)
-export GID=$(id -g)
 
 ##########
 ## Diretório de instalação
@@ -82,50 +77,38 @@ echo "db.url = jdbc:postgresql://dspace7db.dspacenet:5432/dspace" >> source/DSpa
 echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >> source/DSpace-dspace-7.5/dspace/config/local.cfg
 
+./migra-solr.sh
 
-mkdir ~/.m2 >> true
+
+rm -rf ./dspace-install-dir/config/spring
+cp -r ./source/DSpace-dspace-7.5/dspace/config/spring ./dspace-install-dir/config/
+# Compile
+mkdir ~/.m2 || true
 docker run -v ~/.m2:/var/maven/.m2 -v "$(pwd)/source/DSpace-dspace-7.5":/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -u ${UID} -e MAVEN_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 mvn -q --no-transfer-progress -Duser.home=/var/maven clean package -P dspace-oai,\!dspace-sword,\!dspace-swordv2,\!dspace-rdf,\!dspace-iiif
-
 ### TODO: give ant a better place
-docker run -v ~/.m2:/var/maven/.m2 -v $(pwd)/dspace-install-dir:/dspace -v $(pwd)/source/DSpace-dspace-7.5:/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -u ${UID} -e MAVEN_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 \
-    wget "https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz" \
-    && tar -xzf apache-ant-1.10.12-bin.tar.gz \
-    && chmod 775 ./apache-ant-1.10.12/bin/ant \
-    && ls -lsah \
-    && cd ./dspace/target/dspace-installer \
-    && ./apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps \
-    && rm -rf ../../apache-ant-* \
-    && mvn clean
 
+# Ant
+docker run -v ~/.m2:/var/maven/.m2  -v $(pwd)/dspace-install-dir:/dspace  -v $(pwd)/source/DSpace-dspace-7.5:/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -u ${UID} -e MAVEN_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 /bin/bash -c "wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz && tar -xvzf apache-ant-1.10.12-bin.tar.gz && cd dspace/target/dspace-installer && ../../../apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps && cd ../../../ && rm -rf apache-ant-*"
 
-docker run -v ~/.m2:/var/maven/.m2  -v $(pwd)/dspace-install-dir:/dspace -v "$(pwd)/source/DSpace-dspace-7.5":/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -u ${UID} -e MAVEN_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 \
-    wget "https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz" \
-    && tar -xzf apache-ant-1.10.12-bin.tar.gz \
-    && chmod 775 ./apache-ant-1.10.12/bin/ant \
-    && cd ./dspace/target/dspace-installer \
-    && ./apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps \
-    && cd ../../ \
-    && rm -rf apache-ant-*
 
 ### FIM Inicio
 
-#./migra-solr.sh
 
 ### FIM Solr
 
-#docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
-#
-#sleep 20
-#
-#
-#for file in ./tmp/solr_*
-#do
-#  echo "Sending file ${file##*/} to Solr..."
-#  docker run --rm --network="dspacenet" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
-#done
+docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
 
-#rm ./tmp/*
-#docker rm -f tomcatsolr || true
+sleep 20
+
+
+for file in ./tmp/solr_*
+do
+  echo "Sending file ${file##*/} to Solr..."
+  docker run --rm --network="dspacenet" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
+done
+
+rm ./tmp/*
+docker rm -f tomcatsolr || true
 
 
 #docker exec -it dspace7 /dspace/bin/dspace filter-media &
