@@ -1,7 +1,6 @@
 #!/bin/bash
 
 {
-#!/bin/bash
 
 cp ./dockerfiles/old-solr-xml.xml ./dspace-install-dir/webapps/solr/WEB-INF/web.xml
 
