@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 docker rm -f dspace7 || true > /dev/null 2>&1
 
