@@ -1,5 +1,8 @@
 #!/bin/bash
 
+{
+#!/bin/bash
+
 cp ./dockerfiles/old-solr-xml.xml ./dspace-install-dir/webapps/solr/WEB-INF/web.xml
 
 
@@ -30,7 +33,6 @@ echo "Handling the solr dump files"
 for file in ./tmp/solr_*
 do
   if  [ "${file##*/}" != "solr_aa" ]; then
-    echo "Adding header to file ${file##*/}"
     docker run --rm -e PARCIAL_SOLR=${file} -v $(pwd)/tmp:/tmp -w /tmp intel/qat-crypto-base:qatsw-ubuntu \
       sed -i '1s/^/owner,submitter,isBot,statistics_type,previousWorkflowStep,workflowItemId,ip,dns,workflowStep,userAgent,type,actor,referrer,uid,owningItem,bundleName,id,time,epersonid,owningColl,owningComm\n/' ${file##*/}
   fi
@@ -42,5 +44,4 @@ rm -rf ./dspace-install-dir/webapps
 docker rm -f tomcatsolr
 
 
-
-
+} >>./execution.log 2>&1
