@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 docker rm -f dspace7-angular
 docker rmi -f docker_dspace7-angular

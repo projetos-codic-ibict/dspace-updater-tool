@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 rm dspace-7.5.zip || true > /dev/null 2>&1 > /dev/null
 sleep 1
