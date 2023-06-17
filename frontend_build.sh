@@ -105,11 +105,24 @@ printf '
 --------------------------------------
 \U0001F185 \t \U00023F3
 --------------------------------------
-\e[1mPT_BR\e[0m: Inicializa o DSpace frontend
-\e[1mEN\e[0m: Initializes the DSpace frontend
+\e[1mPT_BR\e[0m: Inicializa o DSpace frontend. Esta operação demora.
+\e[1mEN\e[0m: Initializes the DSpace frontend. This operation takes a while.
 '
 
 {
   echo "Setting up DSpace angular"
   docker compose -f source/dspace-angular-dspace-7.5/docker/docker-compose.yml up --build -d
 } >>./execution.log 2>&1
+
+
+
+timeout 1000s grep -q 'Compiled successfully.' <(docker logs dspace7-angular --follow)
+
+printf '
+--------------------------------------
+\U0001F186 \t \U0001F680 \U0001F389
+--------------------------------------
+\e[1mPT_BR\e[0m: O frontend foi inicializado! Os endereços do DSpace deverão estar disponíveis nos endereços informados no arquivo "upgrade-variables.properties".
+\e[1mEN\e[0m: The DSpace frontend is ready! The access URLs will be the ones registered in the file "upgrade-variables.properties".
+'
+
