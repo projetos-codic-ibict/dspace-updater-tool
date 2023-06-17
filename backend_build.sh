@@ -9,6 +9,9 @@
 } >> ./execution.log 2>&1
 
 printf '
+--------------------------------------
+\U0001F171
+--------------------------------------
 \e[1mPT_BR\e[0m: Gerando uma nova senha do PostgreSQL para esta nova instalação. Você poderá encontrar a nova senha no arquivo localizado em "dspace-install-dir/config/local.cfg"
 \e[1mEN\e[0m: Generating a new PostgreSQL password for this installation. You will be able to find this new password in "dspace-install-dir/config/local.cfg"
 '
@@ -17,6 +20,9 @@ printf '
 } >>./execution.log 2>&1
 
 printf '
+--------------------------------------
+\U0001F172
+--------------------------------------
 \e[1mPT_BR\e[0m: Copiando os arquivos do diretório de instalação do DSpace antigo
 \e[1mEN\e[0m: Copying the files from the old DSpace installation
 '
@@ -31,8 +37,11 @@ printf '
 if [[ "${BACKEND_ADDRESS_GIT}" ]]; then
 
   printf '
-  \e[1mPT_BR\e[0m: Clonando o repositório GIT especificado como fonte para o DSpace 7.5
-  \e[1mEN\e[0m: Cloning the GIT repo specified as DSpace 7.5 source
+  --------------------------------------
+  \U0001F173
+  --------------------------------------
+  \e[1mPT_BR\e[0m: Backend: Clonando o repositório GIT especificado como fonte para o DSpace 7.5
+  \e[1mEN\e[0m: Backend: Cloning the GIT repo specified as DSpace 7.5 source
   '
   {
     docker run --rm -e BACKEND_ADDRESS_GIT:${BACKEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git &&
@@ -40,9 +49,12 @@ if [[ "${BACKEND_ADDRESS_GIT}" ]]; then
   } >>./execution.log 2>&1
 else
 
-  printf '
-\e[1mPT_BR\e[0m: Efetuando o download do fonte do DSpace 7.5 do GitHub do DSpace
-\e[1mEN\e[0m: Downloading the source of DSpace 7.5 from DSpace Github
+printf '
+--------------------------------------
+\U0001F173
+--------------------------------------
+\e[1mPT_BR\e[0m Backend: Efetuando o download do fonte do DSpace 7.5 do GitHub do DSpace
+\e[1mEN\e[0m: Backend: Downloading the source of DSpace 7.5 from DSpace Github
 '
   {
     docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip &&
@@ -56,8 +68,11 @@ else
 fi
 
 printf '
-\e[1mPT_BR\e[0m: Efetuando substituição de variáveis nos arquivos de deployment do DSpace
-\e[1mEN\e[0m: Filling the variables in the deployment files
+--------------------------------------
+\U0001F174
+--------------------------------------
+\e[1mPT_BR\e[0m: Backend: Efetuando substituição de variáveis nos arquivos de deployment do DSpace.
+\e[1mEN\e[0m: Backend: Filling the variables in the deployment files.
 '
 
 {
@@ -91,14 +106,20 @@ printf '
 } >>./execution.log 2>&1
 
 printf '
-\e[1mPT_BR\e[0m: Gerando backup das estatísticas de acesso do Solr antigo. \U00023F3 \t Esta operação pode demorar.
-\e[1mEN\e[0m: Generating the backup of old Solr statistics. \U00023F3 \t This opperation might take a while.
+--------------------------------------
+\U0001F175 \t \U0001F4C8 \t \U00023F3
+--------------------------------------
+\e[1mPT_BR\e[0m: Gerando backup das estatísticas de acesso do Solr antigo. Esta operação pode demorar.
+\e[1mEN\e[0m: Generating the backup of old Solr statistics. This opperation might take a while.
 '
 source ./migrate-solr.sh
 
 printf '
-\e[1mPT_BR\e[0m: Compila o DSpace e gera o novo diretório de instalação. \U00023F3 \t Esta operação pode demorar.
-\e[1mEN\e[0m: Compile the DSpace source and generates the new installation directory. \U00023F3 \t This opperation might take a while.
+--------------------------------------
+\U0001F176 \t \U0001F528 \t \U00023F3
+--------------------------------------
+\e[1mPT_BR\e[0m: Compila o DSpace e gera o novo diretório de instalação. Esta operação pode demorar.
+\e[1mEN\e[0m: Compile the DSpace source and generates the new installation directory. This opperation might take a while.
 '
 
 {
@@ -110,16 +131,30 @@ printf '
 
   # Ant
   docker run -v ~/.m2:/var/maven/.m2 -v $(pwd)/dspace-install-dir:/dspace -v $(pwd)/source/DSpace-dspace-7.5:/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVen_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 /bin/bash -c "wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz && tar -xvzf apache-ant-1.10.12-bin.tar.gz && cd dspace/target/dspace-installer && ../../../apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps && cd ../../../ && rm -rf apache-ant-*"
-
-  docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
-
-  sleep 10
 } >>./execution.log 2>&1
 
 
 printf '
-\e[1mPT_BR\e[0m: Importa o backup do Solr gerado anteriormente para a nova instância do Solr. \U00023F3 \t Esta operação pode demorar.
-\e[1mEN\e[0m: Imports the previous generated Solr dump to the new instance of Solr. \U00023F3 \t This opperation might take a while.
+--------------------------------------
+\U0001F177
+--------------------------------------
+\e[1mPT_BR\e[0m: Inicializa o DSpace server
+\e[1mEN\e[0m: Initializes the DSpace sever
+'
+
+{
+  docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
+
+sleep 10
+} >>./execution.log 2>&1
+
+
+printf '
+--------------------------------------
+\U0001F178 \t \U0001F4C8 \t \U00023F3
+--------------------------------------
+\e[1mPT_BR\e[0m: Importa o backup do Solr gerado anteriormente para a nova instância do Solr. sta operação pode demorar.
+\e[1mEN\e[0m: Imports the previous generated Solr dump to the new instance of Solr. This opperation might take a while.
 '
 
 {
@@ -128,11 +163,14 @@ printf '
   docker run --rm --network="dspacenet" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
 done
 
-rm ./tmp/*
+sudo rm -rf ./tmp/*
 docker rm -f tomcatsolr || true
 } >> ./execution.log 2>&1
 
 printf '
-\e[1mPT_BR\e[0m: O script finalizou. Os endereços do DSpace deverão estar disponíveis nos endereços informados no arquivo "upgrade-variables.properties".
-\e[1mEN\e[0m: The scripts has finished. The access URLs will be the ones registered in the file "upgrade-variables.properties".
+--------------------------------------
+\U0001F179 \t \U0001F680 \U0001F389
+--------------------------------------
+\e[1mPT_BR\e[0m: O backend do DSpace está pronto! Os endereços do DSpace deverão estar disponíveis nos endereços informados no arquivo "upgrade-variables.properties".
+\e[1mEN\e[0m: The DSpace backend is ready! The access URLs will be the ones registered in the file "upgrade-variables.properties".
 '

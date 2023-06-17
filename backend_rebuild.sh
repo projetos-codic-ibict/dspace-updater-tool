@@ -1,10 +1,13 @@
 #!/bin/bash
 
 printf '
-\e[1mPT_BR\e[0m: Removendo arquivos e container de execuções antigas (caso eles existam).
+--------------------------------------
+\U0001F170
+--------------------------------------
+\e[1mPT_BR\e[0m: Backend: Removendo arquivos e container de execuções antigas (caso eles existam).
 Sua senha root será solicitada.
 
-\e[1mEN\e[0m: Deleting old files and containers from previous executions (in case they exists).
+\e[1mEN\e[0m: Backend Deleting old files and containers from previous executions (in case they exists).
 Your root password will be requested.
 '
 
