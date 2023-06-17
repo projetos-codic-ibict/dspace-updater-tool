@@ -1,8 +1,6 @@
 #!/bin/bash
 
-source ./variaveis-para-atualizacao.properties
-
-docker pull intel/qat-crypto-base:qatsw-ubuntu
+source ./../upgrade-variables.propertiesdocker pull intel/qat-crypto-base:qatsw-ubuntu
 docker pull kubeless/unzip
 
 
@@ -58,7 +56,7 @@ docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5/docker:/root intel/qa
 
 
 docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5:/root intel/qat-crypto-base:qatsw-ubuntu \
-  sed -i -E "s/\/\/ Angular Universal settings/defaultLanguage: 'pt_BR',/g" /root/src/environments/environment.ts
+  sed -i -E "s/\/\/ Angular Universal settings/defaultLanguage: '\e[1mPT_BR\e[0m',/g" /root/src/environments/environment.ts
 
 
 docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.5:/root intel/qat-crypto-base:qatsw-ubuntu \
