@@ -17,7 +17,7 @@ Your root password will be requested.
   docker pull kubeless/unzip
 } >>./execution.log 2>&1
 
-{
+
 if [[ "${FRONTEND_ADDRESS_GIT}" ]]; then
 printf '
 --------------------------------------
@@ -26,9 +26,10 @@ printf '
 \e[1mPT_BR\e[0m: Frontend: Clonando o repositório GIT especificado como fonte para o DSpace 7.5
 \e[1mEN\e[0m: Frontend: Cloning the GIT repo specified as DSpace 7.5 source
 '
-
+{
   docker run --rm -e FRONTEND_ADDRESS_GIT:${FRONTEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git &&
     git clone --depth 1 ${FRONTEND_ADDRESS_GIT} dspace-angular-dspace-7.5
+} >>./execution.log 2>&1
 
 else
 printf '
@@ -38,13 +39,15 @@ printf '
 \e[1mPT_BR\e[0m Backend: Efetuando o download do fonte do DSpace 7.5 do GitHub do DSpace
 \e[1mEN\e[0m: Backend: Downloading the source of DSpace 7.5 from DSpace Github
 '
+{
   docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip &&
     curl https://github.com/DSpace/dspace-angular/archive/refs/tags/dspace-7.5.zip -o dspace-7.5.zip -L &&
     unzip -q dspace-7.5.zip &&
     rm dspace-7.5.zip &&
     rm -rf dspace-7.5
-fi
 } >>./execution.log 2>&1
+
+fi
 
 printf '
 --------------------------------------
