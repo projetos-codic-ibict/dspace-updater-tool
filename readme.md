@@ -33,7 +33,7 @@ Esta ferramenta atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 7
 - Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor;
 - Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `upgrade-to-dspace7.sh`.
 
-
+### Todos logs serão escritos em: `[DSPACE_UPGRADE_TOOL]/execution.log`
 
 ## Informações adicionais sobre a instalação
 
@@ -80,7 +80,7 @@ This tool upgrades any DSpace 4, 5 or 6 to the latest DSpace 7.5, without the ne
 - Run the script this way: `./upgrade-to-dspace7.sh`
   - If there's any problem during the installation (eg: forgot to fullfill any variable) you can run this script again;
 
-
+All logs will by written in: `[DSPACE_UPGRADE_TOOL]/execution.log`
 
 
 ## Additional informations about the new DSpace instalation
