@@ -25,13 +25,14 @@ Esta ferramenta atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 7
   - Comando de exemplo para geração do dump:
     `pg_dump --dbname=postgresql://dspace:dspace@192.169.5.126:5005/dspace > dump.sql`
 - Copie o diretório de instalação do DSpace antigo para o servidor onde o DSpace 7 irá rodar. Os diretórios obrigatórios são: config, assetstore, webapps e solr.
-- Preencha o arquivo `upgrade-variables.properties` .
+- Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties` .
+  - Caso você já possua um repositório GIT com seu DSpace 7.5, informe o endereço neste arquivo, a ferramenta irá fazer o clone ao invés de fazer download do zip do repositório do DSpace original.  
 - Adicione configurações adicionais no arquivo `dspace.cfg`, como informações para envio de e-mail, etc.
 - Rode o script `upgrade-to-dspace7.sh`
   - Caso ocorra algum problema com o preenchimento das variáveis, efetue a correção e rode o script novamente.
 
 - Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor;
-- Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `upgrade-to-dspace7.sh`.
+- Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties`.
 
 ### Todos logs serão escritos em: `[DSPACE_UPGRADE_TOOL]/execution.log`
 
@@ -43,12 +44,12 @@ Esta ferramenta atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 7
 ## Problemas comuns
 
 ### Erro 500 na tela
-- Verifique se está acessando o DSpace pelo endereço cadastrado no arquivo `variaveis-para-atualizacao.properties`
-- Verifique se o endereço retornado pelo comando `docker exec -it dspace7 cat /dspace/config/local.cfg | grep  dspace.ui.url` confere com o cadastrado no arquivo `variaveis-para-atualizacao.properties`. Caso negativo, refaça a migração com os valores corretos. Isso pode acontecer caso você tenha feito o "backend" apontando para um endereço e o "frontend" apontando para outro endereço.
+- Verifique se está acessando o DSpace pelo endereço cadastrado no arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties`
+- Verifique se o endereço retornado pelo comando `docker exec -it dspace7 cat /dspace/config/local.cfg | grep  dspace.ui.url` confere com o cadastrado no arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties`. Caso negativo, refaça a migração com os valores corretos. Isso pode acontecer caso você tenha feito o "backend" apontando para um endereço e o "frontend" apontando para outro endereço.
 
 
 ### Tela branca
-- Verifique se os endereços IP/Porta fornecidos no arquivo `variaveis-para-atualizacao.properties` estão acessíveis.
+- Verifique se os endereços IP/Porta fornecidos no arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties` estão acessíveis.
 
 - 
 ---
