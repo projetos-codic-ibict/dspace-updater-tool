@@ -65,9 +65,11 @@ This tool upgrades any DSpace 4, 5 or 6 to the latest DSpace 7.5, without the ne
 - Imports the Solr statistics from the old DSpace to DSpace 7;
 - Upgrades the DSpace's database strcuture to the latest version;
 - In other words, criates and initializes the services: database, dspace server, dspace angular and postgresql;
+- This tool does not require your server to have other programs, such as: java, ant, maven, postgres, tomcat, solr, etc. The only required program is "doocker" 
 
 ## Procedure
 
+- Have a linux S.O.;
 - Download this repo;
 - Install the commands `docker` and `docker compose` in the server which will receive the new DSpace 7. We highly recomend to use a new server for DSpace 7;
 - Make sure you have at least 3x more space in disk than the space used by the old DSpace;
