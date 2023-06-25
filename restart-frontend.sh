@@ -1,9 +1,11 @@
 #!/bin/bash
 
+{
 docker rm -f dspace7-angular
 docker rmi -f docker_dspace7-angular
 
-
+source ./upgrade-variables.properties
+} >>./execution.log 2>&1
 
 printf '
 --------------------------------------
@@ -29,4 +31,6 @@ if [[ "${FRONTEND_ADDRESS_GIT}" ]]; then
   } >>./execution.log 2>&1
 fi
 
+{
 docker compose -f source/dspace-angular-dspace-7.5/docker/docker-compose.yml up --build -d
+} >>./execution.log 2>&1
