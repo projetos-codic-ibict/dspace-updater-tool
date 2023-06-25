@@ -27,7 +27,7 @@ if [[ "${FRONTEND_ADDRESS_GIT}" ]]; then
   {
     cd source/dspace-angular-dspace-7.5
     docker run --rm -e FRONTEND_ADDRESS_GIT:${FRONTEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git &&
-      git pull ${FRONTEND_ADDRESS_GIT} dspace-angular-dspace-7.5
+      git pull ${FRONTEND_ADDRESS_GIT}
   } >>./execution.log 2>&1
 fi
 
