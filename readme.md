@@ -18,7 +18,7 @@ Esta ferramenta atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 7
 - Atualiza banco de dados para a versão 7;
 - Cria e incializa os serviços: banco de dados, dspace server, dspace angular e PostgreSQL;
 
-## Procedimento
+## Procedimento para migrar para o Dspace 7
 
 - Instale os comandos "docker" e "docker compose" no seu servidor;
 - Gere um dump do banco de dados (PostgreSQL) com o comando `pg_dump`. O nome do arquivo deve ser `dump.sql` e deve ser colocado no diretório `dump-postgres`;
@@ -33,6 +33,18 @@ Esta ferramenta atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 7
 
 - Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor;
 - Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties`.
+
+## Procedimento para aplicar mudanças no DSpace 7
+
+
+### Front-end (angular)
+- Caso você tenha especificado um repositório git para sua interface angular, no arquivo `upgrade-variables.properties` esta ferramenta fará o `pull` do novo código e recompilar o código-fonte localizado em:  `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-7.5`;
+- Caso você não tenha informado um repositório Git, esta ferramenta irá apenar recompilar o código presente em: `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-7.5`;
+- Para recompilar a interface, execute:  `./restart-frontend.sh`
+
+### Backend
+- Para aplicar mudanças feitas no diretório de instalação, (`[DSPACE_UPGRADE_TOOL]/dspace-install-dir`) execute `./restart-backend.sh`
+
 
 ### Todos logs serão escritos em: `[DSPACE_UPGRADE_TOOL]/execution.log`
 
@@ -67,7 +79,7 @@ This tool upgrades any DSpace 4, 5 or 6 to the latest DSpace 7.5, without the ne
 - In other words, criates and initializes the services: database, dspace server, dspace angular and postgresql;
 - This tool does not require your server to have other programs, such as: java, ant, maven, postgres, tomcat, solr, etc. The only required program is "doocker" 
 
-## Procedure
+## Procedure to migration
 
 - Have a linux S.O.;
 - Download this repo;
@@ -82,6 +94,17 @@ This tool upgrades any DSpace 4, 5 or 6 to the latest DSpace 7.5, without the ne
 - (Optional but important) Add extra configuration to the file `[DSPACE_UPGRADE_TOOL]/local.cfg`, as email credentians, and so on;
 - Run the script this way: `./upgrade-to-dspace7.sh`
   - If there's any problem during the installation (eg: forgot to fullfill any variable) you can run this script again;
+
+## Procedure to apply changes on DSpace 7
+
+### Front-end (angular)
+- If you've set a git repo for your angular interface, this tool will `pull` the new code and re-compile the source in `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-7.5`;
+- If you haven't set a git repo for your angular interface this tool will just recompile the source in  `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-7.5`;
+- Tô recompile your angular interface, just run  `./restart-frontend.sh`
+
+### Backend
+- To apply changes made in the "DSpace dir" (`[DSPACE_UPGRADE_TOOL]/dspace-install-dir`) run `./restart-backend.sh`
+
 
 All logs will by written in: `[DSPACE_UPGRADE_TOOL]/execution.log`
 
