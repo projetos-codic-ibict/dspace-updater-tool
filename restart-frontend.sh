@@ -2,18 +2,13 @@
 
 {
 docker rm -f dspace7-angular
+docker rm -f dspace-angular
 docker rmi -f docker_dspace7-angular
 
 source ./upgrade-variables.properties
 } >>./execution.log 2>&1
 
-printf '
---------------------------------------
 
---------------------------------------
-\e[1mPT_BR\e[0m: Backend: Recompilando módulo angular
-\e[1mEN\e[0m: Backend: Re-compiling the angular mudule
-'
 
 if [[ "${FRONTEND_ADDRESS_GIT}" ]]; then
 
@@ -32,6 +27,13 @@ if [[ "${FRONTEND_ADDRESS_GIT}" ]]; then
   } >>./execution.log 2>&1
 fi
 
+printf '
+--------------------------------------
+\U0001F4C8 \t \U00023F3
+--------------------------------------
+\e[1mPT_BR\e[0m: Backend: Recompilando módulo angular
+\e[1mEN\e[0m: Backend: Re-compiling the angular mudule
+'
 {
 docker compose -f source/dspace-angular-dspace-7.5/docker/docker-compose.yml up --build -d
 } >>./execution.log 2>&1
