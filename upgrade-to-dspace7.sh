@@ -1,5 +1,6 @@
 #!/bin/bash
 
 
-source ./backend_rebuild.sh
+source ./backend_remove.sh
+source ./backend_build.sh
 source ./frontend_rebuild.sh

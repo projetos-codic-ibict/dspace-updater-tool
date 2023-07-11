@@ -47,6 +47,8 @@ services:
       - /bin/bash
       - '-c'
       - |
+        /dspace/bin/dspace database migrate ignored
+        ln -s /dspace/webapps/server /usr/local/tomcat/webapps/ || true
         catalina.sh run
 
   # DSpace Solr container

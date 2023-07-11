@@ -17,5 +17,7 @@ function instala_pg_crypto() {
 cria_usuario_e_bd
 instala_pg_crypto
 
-echo "Identificado arquivo de DUMP efetuando a restauração"
-psql -d dspace -U dspace -f /opt/dump.sql
+if [[ -f /opt/dump.sql ]]; then
+  echo "Identificado arquivo de DUMP efetuando a restauração"
+  psql -d dspace -U dspace -f /opt/dump.sql
+fi

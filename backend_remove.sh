@@ -29,4 +29,3 @@ Your root password will be requested.
   docker volume rm dspace-dspace-75_solr_data || true >/dev/null 2>&1
 } >> execution.log 2>&1
 
-source ./backend_build.sh
