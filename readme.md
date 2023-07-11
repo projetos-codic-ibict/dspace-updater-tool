@@ -31,7 +31,7 @@ Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versõe
 - Rode o script `./create-dspace7.sh`
   - Caso ocorra algum problema com o preenchimento das variáveis, efetue a correção e rode o script novamente.
 - Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor, ao final você será soliciado a criar um novo usuário;
-- Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties`.
+- Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `[DSPACE_UPGRADE_TOOL]/ibict_upgrade-variables.properties`.
 
 
 
