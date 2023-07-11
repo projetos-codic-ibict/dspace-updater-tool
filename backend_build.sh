@@ -1,12 +1,18 @@
 #!/bin/bash
 
 {
-  source ./upgrade-variables.properties
+
+  if ! [[ $1 ]]; then
+    source ./upgrade-variables.properties
+  else
+    source ./ibict_upgrade-variables.properties
+    source ./_default_instalation_variables.properties
+  fi
 
   docker pull intel/qat-crypto-base:qatsw-ubuntu
   docker pull kubeless/unzip
   docker pull alpine/git
-} >> ./execution.log 2>&1
+} >>./execution.log 2>&1
 
 printf '
 --------------------------------------
@@ -23,8 +29,8 @@ printf '
 --------------------------------------
 \U0001F172
 --------------------------------------
-\e[1mPT_BR\e[0m: Copiando os arquivos do diretório de instalação do DSpace antigo
-\e[1mEN\e[0m: Copying the files from the old DSpace installation
+\e[1mPT_BR\e[0m: Copiando os arquivos do diretório de instalação do DSpace
+\e[1mEN\e[0m: Copying the files from the DSpace installation
 '
 
 {
@@ -49,7 +55,7 @@ if [[ "${BACKEND_ADDRESS_GIT}" ]]; then
   } >>./execution.log 2>&1
 else
 
-printf '
+  printf '
 --------------------------------------
 \U0001F173
 --------------------------------------
@@ -92,7 +98,12 @@ printf '
   docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.5/docker-compose_restart.yml
 
   cp -r ./dockerfiles/docker/postgres ./source
-  cp ./dump-postgres/dump.sql ./source/postgres
+
+  if ! [[ $1 ]]; then
+
+    cp ./dump-postgres/dump.sql ./source/postgres
+
+  fi
 
   docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root -w /root intel/qat-crypto-base:qatsw-ubuntu \
     sed -i -E "s/CREATE USER dspace WITH PASSWORD '(.*)'/CREATE USER dspace WITH PASSWORD '${DSPACE_POSTGRES_PASSWORD}'/g" /root/postgres/scripts/prepara-postgres.sh
@@ -105,14 +116,16 @@ printf '
   echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >>source/DSpace-dspace-7.5/dspace/config/local.cfg
 } >>./execution.log 2>&1
 
-printf '
---------------------------------------
-\U0001F175 \t \U0001F4C8 \t \U00023F3
---------------------------------------
-\e[1mPT_BR\e[0m: Gerando backup das estatísticas de acesso do Solr antigo. Esta operação pode demorar.
-\e[1mEN\e[0m: Generating the backup of old Solr statistics. This opperation might take a while.
-'
-source ./migrate-solr.sh
+if ! [[ $1 ]]; then
+  printf '
+  --------------------------------------
+  \U0001F175 \t \U0001F4C8 \t \U00023F3
+  --------------------------------------
+  \e[1mPT_BR\e[0m: Gerando backup das estatísticas de acesso do Solr antigo. Esta operação pode demorar.
+  \e[1mEN\e[0m: Generating the backup of old Solr statistics. This opperation might take a while.
+  '
+  source ./migrate-solr.sh
+fi
 
 printf '
 --------------------------------------
@@ -123,8 +136,10 @@ printf '
 '
 
 {
-  rm -rf ./dspace-install-dir/config/spring
-  cp -r ./source/DSpace-dspace-7.5/dspace/config/spring ./dspace-install-dir/config/
+  if ! [[ $1 ]]; then
+    rm -rf ./dspace-install-dir/config/spring
+    cp -r ./source/DSpace-dspace-7.5/dspace/config/spring ./dspace-install-dir/config/
+  fi
   # Maven
   mkdir ~/.m2 || true
   docker run -v ~/.m2:/var/maven/.m2 -v "$(pwd)/source/DSpace-dspace-7.5":/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVen_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 mvn -q --no-transfer-progress -Duser.home=/var/maven clean package -P dspace-oai,\!dspace-sword,\!dspace-swordv2,\!dspace-rdf,\!dspace-iiif
@@ -132,7 +147,6 @@ printf '
   # Ant
   docker run -v ~/.m2:/var/maven/.m2 -v $(pwd)/dspace-install-dir:/dspace -v $(pwd)/source/DSpace-dspace-7.5:/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVen_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 /bin/bash -c "wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz && tar -xvzf apache-ant-1.10.12-bin.tar.gz && cd dspace/target/dspace-installer && ../../../apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps && cd ../../../ && rm -rf apache-ant-*"
 } >>./execution.log 2>&1
-
 
 printf '
 --------------------------------------
@@ -143,34 +157,41 @@ printf '
 '
 
 {
-  docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
+  if ! [[ $1 ]]; then
+    docker compose -f source/DSpace-dspace-7.5/docker-compose_migration.yml up --build -d
+  else
+    docker compose -f source/DSpace-dspace-7.5/docker-compose_restart.yml up --build -d
+  fi
 
-sleep 10
+  sleep 10
 } >>./execution.log 2>&1
 
 
-printf '
---------------------------------------
-\U0001F178 \t \U0001F4C8 \t \U00023F3
---------------------------------------
-\e[1mPT_BR\e[0m: Importa o backup do Solr gerado anteriormente para a nova instância do Solr. sta operação pode demorar.
-\e[1mEN\e[0m: Imports the previous generated Solr dump to the new instance of Solr. This opperation might take a while.
-'
+if ! [[ $1 ]]; then
 
-{
-  for file in ./tmp/solr_*; do
-  echo "Sending file ${file##*/} to Solr..."
-  docker run --rm --network="dspacenet" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
-done
+  printf '
+  --------------------------------------
+  \U0001F178 \t \U0001F4C8 \t \U00023F3
+  --------------------------------------
+  \e[1mPT_BR\e[0m: Importa o backup do Solr gerado anteriormente para a nova instância do Solr. sta operação pode demorar.
+  \e[1mEN\e[0m: Imports the previous generated Solr dump to the new instance of Solr. This opperation might take a while.
+  '
 
-sudo rm -rf ./tmp/*
-docker rm -f tomcatsolr || true
-} >> ./execution.log 2>&1
+  {
+    for file in ./tmp/solr_*; do
+      echo "Sending file ${file##*/} to Solr..."
+      docker run --rm --network="dspacenet" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
+    done
 
+    sudo rm -rf ./tmp/*
+    docker rm -f tomcatsolr || true
+  } >>./execution.log 2>&1
+
+fi
 printf '
 --------------------------------------
 \U0001F179 \t \U0001F680 \U0001F389
 --------------------------------------
-\e[1mPT_BR\e[0m: O backend do DSpace está pronto! Os endereços do DSpace deverão estar disponíveis nos endereços informados no arquivo "upgrade-variables.properties".
-\e[1mEN\e[0m: The DSpace backend is ready! The access URLs will be the ones registered in the file "upgrade-variables.properties".
+\e[1mPT_BR\e[0m: O backend do DSpace está pronto! Os endereços do DSpace deverão estar disponíveis nos endereços informados no arquivo de variáveis.
+\e[1mEN\e[0m: The DSpace backend is ready! The access URLs will be the ones registered in the variables files.
 '
