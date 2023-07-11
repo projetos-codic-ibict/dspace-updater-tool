@@ -9,16 +9,33 @@ Autor: Márcio Gurgel (marcio.rga@gmail.com)
 # PT_BR (english bellow)
 
 # Sobre
-Esta ferramenta atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 7.5 com pouca necessidade de intervenção humana.
+Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 7.5 com pouca necessidade de intervenção humana.
 
 ## O que a ferramenta faz?
 
+### Em caso de criação de um novo DSpace 7
+- Cria instalação padrão IBICT do DSpace 7
+
+### Em caso de atualização do DSpace
 - Atualiza os formulários de submissão para o novo formato do DSpace 7;
 - Importa as estatísticas de uso do Solr da instalação antiga para a instalação nova;
 - Atualiza banco de dados para a versão 7;
 - Cria e incializa os serviços: banco de dados, dspace server, dspace angular e PostgreSQL;
 
-## Procedimento para migrar para o Dspace 7
+## Procedimentos
+
+### Para instalar um novo DSpace
+- Instale os comandos "docker" e "docker compose" no seu servidor;
+- Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/ibict_upgrade-variables.properties` .
+- Adicione configurações adicionais no arquivo `local.cfg`, como informações para envio de e-mail, etc.
+- Rode o script `./create-dspace7.sh`
+  - Caso ocorra algum problema com o preenchimento das variáveis, efetue a correção e rode o script novamente.
+- Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor, ao final você será soliciado a criar um novo usuário;
+- Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties`.
+
+
+
+### Para atualizar um DSpace antigo para versão 7
 
 - Instale os comandos "docker" e "docker compose" no seu servidor;
 - Gere um dump do banco de dados (PostgreSQL) com o comando `pg_dump`. O nome do arquivo deve ser `dump.sql` e deve ser colocado no diretório `dump-postgres`;
@@ -27,15 +44,16 @@ Esta ferramenta atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 7
 - Copie o diretório de instalação do DSpace antigo para o servidor onde o DSpace 7 irá rodar. Os diretórios obrigatórios são: config, assetstore, webapps e solr.
 - Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties` .
   - Caso você já possua um repositório GIT com seu DSpace 7.5, informe o endereço neste arquivo, a ferramenta irá fazer o clone ao invés de fazer download do zip do repositório do DSpace original.  
-- Adicione configurações adicionais no arquivo `dspace.cfg`, como informações para envio de e-mail, etc.
+- Adicione configurações adicionais no arquivo `local.cfg`, como informações para envio de e-mail, etc.
 - Rode o script `upgrade-to-dspace7.sh`
   - Caso ocorra algum problema com o preenchimento das variáveis, efetue a correção e rode o script novamente.
 
 - Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor;
 - Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties`.
 
-## Procedimento para aplicar mudanças no DSpace 7
 
+
+## Procedimento para aplicar mudanças no DSpace 7
 
 ### Front-end (angular)
 - Caso você tenha especificado um repositório git para sua interface angular, no arquivo `upgrade-variables.properties` esta ferramenta fará o `pull` do novo código e recompilar o código-fonte localizado em:  `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-7.5`;
