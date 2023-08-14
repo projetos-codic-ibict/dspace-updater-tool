@@ -11,7 +11,12 @@ Sua senha root será solicitada.
 Your root password will be requested.
 '
 {
-  source ./upgrade-variables.properties
+  if ! [[ $1 ]]; then
+    source ./upgrade-variables.properties
+  else
+    source ./ibict_upgrade-variables.properties
+    source ./_default_instalation_variables.properties
+  fi
 
   docker pull intel/qat-crypto-base:qatsw-ubuntu
   docker pull kubeless/unzip
