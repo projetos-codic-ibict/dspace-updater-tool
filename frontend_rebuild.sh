@@ -13,9 +13,9 @@ Your root password will be requested.
 '
 
 {
-rm dspace-7.5.zip || true > /dev/null 2>&1 > /dev/null
+rm dspace-7.6.zip || true > /dev/null 2>&1 > /dev/null
 sleep 1
-rm -rf ./source/dspace-angular-dspace-7.5
+rm -rf ./source/dspace-angular-dspace-7.6
 
 docker rm -f dspace7-angular || true > /dev/null 2>&1 > /dev/null
 docker rmi -f docker_dspace7-angular || true > /dev/null 2>&1 > /dev/null
