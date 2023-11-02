@@ -107,6 +107,14 @@ docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6:/root intel/qat-crypt
 docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6:/root intel/qat-crypto-base:qatsw-ubuntu \
   sed -i -E "s/production\: false/production\: true/g" /root/src/environments/environment.ts
 
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6:/root intel/qat-crypto-base:qatsw-ubuntu \
+  export LANG=pt_BR.UTF-8 && \
+  sed -i -E "s/Banner do projeto/${REPOSITORY_NAME}/g" /root/src/themes/dspace/app/home-page/home-news/home-news.component.html
+
+docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6:/root intel/qat-crypto-base:qatsw-ubuntu \
+  export LANG=pt_BR.UTF-8 && \
+  sed -i -E "s/Descrição do banner/${REPOSITORY_DESCRIPTION}/g" /root/src/themes/dspace/app/home-page/home-news/home-news.component.html
+
 } >>./execution.log 2>&1
 
 printf '
