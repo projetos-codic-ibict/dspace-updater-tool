@@ -53,13 +53,6 @@
          <scope visibilityOutside="read-only">submission</scope>
       </step-definition>
 
-      <step-definition id="identifiers">
-         <heading>submit.progressbar.identifiers</heading>
-         <processing-class>org.dspace.app.rest.submit.step.RequestDarkPidStep</processing-class>
-         <type>identifiers</type>
-         <scope visibilityOutside="read-only">submission</scope>
-      </step-definition>
-
 
    </step-definitions>
    <submission-definitions>
