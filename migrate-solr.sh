@@ -5,7 +5,7 @@
 cp ./dockerfiles/old-solr-xml.xml ./dspace-install-dir/webapps/solr/WEB-INF/web.xml
 
 
-mdir -p ./tmp
+mkdir -p ./tmp
 
 docker pull tomcat:8.5.89-jdk8-temurin-jammy
 docker rm -f tomcatsolr || true
