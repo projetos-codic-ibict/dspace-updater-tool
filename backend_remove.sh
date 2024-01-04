@@ -20,7 +20,7 @@ Your root password will be requested.
   rm dspace-7.6.zip || true >/dev/null 2>&1
 
   docker rm -f dspace7 || true >/dev/null 2>&1
-  docker rmi -f dspace-dspace-75-dspace7 || true >/dev/null 2>&1
+  docker rmi -f dspace-dspace-76-dspace7 || true >/dev/null 2>&1
 
   docker rm -f dspace7db || true >/dev/null 2>&1
   docker rm -f dspace7solr || true >/dev/null 2>&1

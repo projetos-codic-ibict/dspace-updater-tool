@@ -22,7 +22,7 @@ printf '
 \e[1mEN\e[0m: Generating a new PostgreSQL password for this installation. You will be able to find this new password in "dspace-install-dir/config/local.cfg"
 '
 {
-  export DSPACE_POSTGRES_PASSWORD=$(docker run intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12 | sed -e "s/\///g")
+  export DSPACE_POSTGRES_PASSWORD=$(docker run --rm intel/qat-crypto-base:qatsw-ubuntu openssl rand -base64 12 | sed -e "s/\///g")
 } >>./execution.log 2>&1
 
 printf '
@@ -94,8 +94,8 @@ printf '
   docker run --rm -v $(pwd)/source:/root -w /root intel/qat-crypto-base:qatsw-ubuntu \
     sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-7.6/docker-compose_restart.yml
 
-  docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.6/docker-compose_migration.yml
-  docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.6/docker-compose_restart.yml
+  docker run --rm -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.6/docker-compose_migration.yml
+  docker run --rm -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.6/docker-compose_restart.yml
 
   cp -r ./dockerfiles/docker/postgres ./source
 
@@ -105,7 +105,7 @@ printf '
 
   fi
 
-  docker run -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root -w /root intel/qat-crypto-base:qatsw-ubuntu \
+  docker run --rm -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root -w /root intel/qat-crypto-base:qatsw-ubuntu \
     sed -i -E "s/CREATE USER dspace WITH PASSWORD '(.*)'/CREATE USER dspace WITH PASSWORD '${DSPACE_POSTGRES_PASSWORD}'/g" /root/postgres/scripts/prepara-postgres.sh
 
   echo "" >source/DSpace-dspace-7.6/dspace/config/local.cfg
@@ -173,7 +173,7 @@ if ! [[ $1 ]]; then
   --------------------------------------
   \U0001F178 \t \U0001F4C8 \t \U00023F3
   --------------------------------------
-  \e[1mPT_BR\e[0m: Importa o backup do Solr gerado anteriormente para a nova instância do Solr. sta operação pode demorar.
+  \e[1mPT_BR\e[0m: Importa o backup do Solr gerado anteriormente para a nova instância do Solr. Esta operação pode demorar.
   \e[1mEN\e[0m: Imports the previous generated Solr dump to the new instance of Solr. This opperation might take a while.
   '
 
