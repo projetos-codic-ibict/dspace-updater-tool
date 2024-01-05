@@ -17,7 +17,7 @@ sleep 1
 rm -rf ./source/dspace-angular-dspace-7.6
 
 docker rm -f dspace7-angular || true > /dev/null 2>&1 > /dev/null
-docker rmi -f docker_dspace7-angular || true > /dev/null 2>&1 > /dev/null
+docker rmi -f docker-dspace7-angular || true > /dev/null 2>&1 > /dev/null
 } >> ./execution.log 2>&1
 
 source ./frontend_build.sh default-ibict
