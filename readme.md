@@ -51,6 +51,7 @@ To use this tool, all you need is: a docker environment, a copy of "dspace-dir" 
 
 > [!IMPORTANT]
 > If there's any problem during the installation (eg: forgot to fullfill any variable) you can run this script again. As many times you need;
+> 
 > The log file [project-root]/execution.log will be written with details of the upgrading process.
 
 
