@@ -63,12 +63,12 @@ else
 \e[1mEN\e[0m: Backend: Downloading the source of DSpace 7.6 from DSpace Github
 '
   {
-    docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip &&
-      curl https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.6.zip -o dspace-7.6.zip -L &&
-      unzip -q dspace-7.6.zip &&
-      sleep 1 &&
-      rm dspace-7.6.zip &&
-      sleep 1 &&
+    docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip && \
+      curl https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.6.zip -o dspace-7.6.zip -L && \
+      unzip -q dspace-7.6.zip && \
+      sleep 1 && \
+      rm dspace-7.6.zip && \
+      sleep 1 && \
       rm -rf dspace-7.6
   } >>./execution.log 2>&1
 fi

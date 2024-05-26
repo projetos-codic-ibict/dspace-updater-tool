@@ -16,7 +16,8 @@ Your root password will be requested.
   sudo rm -rf ./tmp/*
   sudo rm -rf ./dspace-install-dir/*
 
-  sudo rm -rf ./source/DSpace-dspace-7.6
+  sudo rm -rf ./DSpace-dspace-7.6 || true
+  sudo rm -rf ./source/DSpace-dspace-7.6 || true
   rm dspace-7.6.zip || true >/dev/null 2>&1
 
   docker rm -f dspace7 || true >/dev/null 2>&1

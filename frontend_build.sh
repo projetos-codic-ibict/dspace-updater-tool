@@ -32,7 +32,7 @@ printf '
 \e[1mEN\e[0m: Frontend: Cloning the GIT repo specified as DSpace 7.6 source
 '
 {
-  docker run --rm -e FRONTEND_ADDRESS_GIT:${FRONTEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git &&
+  docker run --rm -e FRONTEND_ADDRESS_GIT:${FRONTEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git && \
     git clone --depth 1 ${FRONTEND_ADDRESS_GIT} dspace-angular-dspace-7.6
 } >>./execution.log 2>&1
 
@@ -45,10 +45,10 @@ printf '
 \e[1mEN\e[0m: Backend: Downloading the source of DSpace 7.6 from DSpace Github
 '
 {
-  docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip &&
-    curl https://github.com/DSpace/dspace-angular/archive/refs/tags/dspace-7.6.zip -o dspace-7.6.zip -L &&
-    unzip -q dspace-7.6.zip &&
-    rm dspace-7.6.zip &&
+  docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip && \
+    curl https://github.com/DSpace/dspace-angular/archive/refs/tags/dspace-7.6.zip -o dspace-7.6.zip -L && \
+    unzip -q dspace-7.6.zip && \
+    rm dspace-7.6.zip && \
     rm -rf dspace-7.6
 } >>./execution.log 2>&1
 
