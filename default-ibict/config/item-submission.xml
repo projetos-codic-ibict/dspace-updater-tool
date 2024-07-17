@@ -6,6 +6,12 @@
       <name-map collection-handle="default" submission-name="td"/>
    </submission-map>
    <step-definitions>
+      <step-definition id="collection">
+         <heading></heading>
+         <processing-class>org.dspace.app.rest.submit.step.CollectionStep</processing-class>
+         <type>collection</type>
+         <scope visibility="hidden" visibilityOutside="hidden">submission</scope>
+      </step-definition>
       <step-definition mandatory="true" id="tdpage1">
          <heading>submit.progressbar.describe.step1</heading>
          <processing-class>org.dspace.app.rest.submit.step.DescribeStep</processing-class>
@@ -57,7 +63,7 @@
    </step-definitions>
    <submission-definitions>
       <submission-process name="td">
-         
+         <step id="collection"/>
          <step id="tdpage1"/>
          <step id="tdpage2"/>
          <step id="tdpage3"/>
