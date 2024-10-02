@@ -37,6 +37,7 @@ To use this tool, all you need is: a docker environment, a copy of "dspace-dir" 
       pg_dump --dbname=postgresql://dspace:dspace@192.169.5.126:5005/dspace > dump.sql
     ```
 - Copy the DSPACE_DIR from the old DSpace to any locaiton in the new DSpace;
+- Copy and paste the file `upgrade-variables.properties.EXAMPLE` to `upgrade-variables.properties`;
 - Fullfill the variables in `upgrade-variables.properties` ;
 > [!IMPORTANT]
 > This file has some tips which can help to fill in the variables. 
@@ -107,6 +108,7 @@ Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versõe
 
 ### Para instalar um novo DSpace
 - Instale os comandos "docker" e "docker compose" no seu servidor;
+- Copie e cole o arquivo `[DSPACE_UPGRADE_TOOL]/ibict_upgrade-variables.properties.EXAMPLE` para `[DSPACE_UPGRADE_TOOL]/ibict_upgrade-variables.properties`;
 - Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/ibict_upgrade-variables.properties` .
 - Adicione configurações adicionais no arquivo `local.cfg`, como informações para envio de e-mail, etc.
 - Rode o script `./create-dspace7.sh`
@@ -123,6 +125,7 @@ Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versõe
   - Comando de exemplo para geração do dump:
     `pg_dump --dbname=postgresql://dspace:dspace@192.169.5.126:5005/dspace > dump.sql`
 - Copie o diretório de instalação do DSpace antigo para o servidor onde o DSpace 7 irá rodar. Os diretórios obrigatórios são: config, assetstore, webapps e solr.
+- Copie o arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties.EXAMPLE` para [DSPACE_UPGRADE_TOOL]/upgrade-variables.properties.
 - Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties` .
   - Caso você já possua um repositório GIT com seu DSpace 7.6, informe o endereço neste arquivo, a ferramenta irá fazer o clone ao invés de fazer download do zip do repositório do DSpace original.  
 - Adicione configurações adicionais no arquivo `local.cfg`, como informações para envio de e-mail, etc.
