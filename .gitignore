@@ -4,3 +4,4 @@
 /dump-postgres/dump.sql
 /execution.log
 /source/*
+/upgrade-variables.properties
