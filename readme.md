@@ -129,7 +129,7 @@ Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versõe
 - Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties` .
   - Caso você já possua um repositório GIT com seu DSpace 7.6, informe o endereço neste arquivo, a ferramenta irá fazer o clone ao invés de fazer download do zip do repositório do DSpace original.  
 - Adicione configurações adicionais no arquivo `local.cfg`, como informações para envio de e-mail, etc.
-- Rode o script `upgrade-to-dspace7.sh`
+- Com o usuário root, rode o script `upgrade-to-dspace7.sh`
   - Caso ocorra algum problema com o preenchimento das variáveis, efetue a correção e rode o script novamente.
 
 - Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor;
