@@ -5,3 +5,4 @@
 /execution.log
 /source/*
 /upgrade-variables.properties
+/ibict_upgrade-variables.properties
