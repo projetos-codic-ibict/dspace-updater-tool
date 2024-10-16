@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Copiand config/spring..."
-rm -rf ./dspace-install-dir/config/spring
-cp -r ./source/DSpace-dspace-7.6/dspace/config/spring ./dspace-install-dir/config/
+rm -rf dspace-install-dir/config/spring
+cp -r source/DSpace-dspace-7.6/dspace/config/spring ./dspace-install-dir/config/
 
 # Maven
 echo "Executando maven..."
