@@ -26,6 +26,14 @@ BACKEND_USES_SSL=
 # EN: Not required. If you have a public git repository of your DSpace 7, inform bellow. Otherwise, the backend will be download from the official DSpace Github's repository.
 BACKEND_ADDRESS_GIT=
 
+#################
+# PT_BR: Também defina estas opções se você estiver usando um proxy reverso
+# EN: Also set these options if you're using a reverse proxy
+REVERSE_PROXY_BACKEND_USES_SSL=
+REVERSE_PROXY_BACKEND_PROTOCOL=
+REVERSE_PROXY_BACKEND_HOSTNAME=
+REVERSE_PROXY_BACKEND_PORT=
+
 ############
 ## PT_BR: Configurações do Front-end (Interface gráfica do DSpace)
 ## EN: Front-end configuration (DSpace's interface)
@@ -44,3 +52,10 @@ FRONTEND_PORT=
 # PT_BR: Campo não obrigatório. Caso você já tenha um front-end do DSpace 7 no git, informe abaixo. Caso contrário, o backend será baixado do repositório oficial do DSpace.
 # EN: Not required. If you have a public git repository of your Angular DSpace 7, inform bellow. Otherwise, the frontend will be download from the official DSpace Github's repository.
 FRONTEND_ADDRESS_GIT=
+
+#################
+# PT_BR: Também defina essas opções se você estiver usando um proxy reverso
+# EN: Also set these options if you're using a reverse proxy
+REVERSE_PROXY_FRONTEND_PROTOCOL=
+REVERSE_PROXY_FRONTEND_HOSTNAME=
+REVERSE_PROXY_FRONTEND_PORT=

@@ -113,7 +113,16 @@ printf '
   echo "db.password = ${DSPACE_POSTGRES_PASSWORD}" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
   echo "db.url = jdbc:postgresql://dspace7db.dspacenet:5432/dspace" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
   echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
-  echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
+
+  if [ -n "$REVERSE_PROXY_FRONTEND_PROTOCOL" ] || [ -n "$REVERSE_PROXY_FRONTEND_HOSTNAME" ] || [ -n "$REVERSE_PROXY_FRONTEND_PORT" ]; then
+    if [ -n "$REVERSE_PROXY_FRONTEND_PORT" ]; then
+      echo "dspace.ui.url = ${REVERSE_PROXY_FRONTEND_PROTOCOL}://${REVERSE_PROXY_FRONTEND_HOSTNAME}:${REVERSE_PROXY_FRONTEND_PORT}" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
+    else
+      echo "dspace.ui.url = ${REVERSE_PROXY_FRONTEND_PROTOCOL}://${REVERSE_PROXY_FRONTEND_HOSTNAME}" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
+    fi
+  else
+    echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
+  fi
 } >>./execution.log 2>&1
 
 if ! [[ $1 ]]; then
