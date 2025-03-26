@@ -173,9 +173,9 @@ printf '
 
 {
   if ! [[ $1 ]]; then
-    docker compose -f source/DSpace-dspace-7.6/docker-compose_migration.yml up --build -d
+    ./docker_compose_cmd.sh -f source/DSpace-dspace-7.6/docker-compose_migration.yml up --build -d
   else
-    docker compose -f source/DSpace-dspace-7.6/docker-compose_restart.yml up --build -d
+    ./docker_compose_cmd.sh -f source/DSpace-dspace-7.6/docker-compose_restart.yml up --build -d
   fi
 
   sleep 10

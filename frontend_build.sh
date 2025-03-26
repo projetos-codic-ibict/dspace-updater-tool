@@ -145,7 +145,7 @@ printf '
 
 {
   echo "Setting up DSpace angular"
-  docker compose -f source/dspace-angular-dspace-7.6/docker/docker-compose.yml up --build -d
+  ./docker_compose_cmd.sh -f source/dspace-angular-dspace-7.6/docker/docker-compose.yml up --build -d
 } >>./execution.log 2>&1
 
 

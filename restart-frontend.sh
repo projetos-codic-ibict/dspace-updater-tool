@@ -35,5 +35,5 @@ printf '
 \e[1mEN\e[0m: Backend: Re-compiling the angular mudule
 '
 {
-docker compose -f source/dspace-angular-dspace-7.6/docker/docker-compose.yml up --build -d
+./docker_compose_cmd.sh -f source/dspace-angular-dspace-7.6/docker/docker-compose.yml up --build -d
 } >>./execution.log 2>&1
