@@ -88,27 +88,27 @@ docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6/docker:/root intel/qa
   sed -i -E "s/target: (.*)/target: ${FRONTEND_PORT}/g" /root/docker-compose.yml
 
 
-if [ -n "$REVERSE_PROXY_BACKEND_USES_SSL" ]; then
+if [ -n "$PUBLIC_BACKEND_USES_SSL" ]; then
   docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
-    sed -i -E "s/DSPACE_REST_SSL: '(.*)'/DSPACE_REST_SSL: '${REVERSE_PROXY_BACKEND_USES_SSL}'/g" /root/docker-compose.yml
+    sed -i -E "s/DSPACE_REST_SSL: '(.*)'/DSPACE_REST_SSL: '${PUBLIC_BACKEND_USES_SSL}'/g" /root/docker-compose.yml
 else
   docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
     sed -i -E "s/DSPACE_REST_SSL: '(.*)'/DSPACE_REST_SSL: '${BACKEND_USES_SSL}'/g" /root/docker-compose.yml
 fi
 
 
-if [ -n "$REVERSE_PROXY_BACKEND_HOSTNAME" ]; then
+if [ -n "$PUBLIC_BACKEND_HOSTNAME" ]; then
   docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
-    sed -i -E "s/DSPACE_REST_HOST: '(.*)'/DSPACE_REST_HOST: '${REVERSE_PROXY_BACKEND_HOSTNAME}'/g" /root/docker-compose.yml
+    sed -i -E "s/DSPACE_REST_HOST: '(.*)'/DSPACE_REST_HOST: '${PUBLIC_BACKEND_HOSTNAME}'/g" /root/docker-compose.yml
 else
   docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
     sed -i -E "s/DSPACE_REST_HOST: '(.*)'/DSPACE_REST_HOST: '${BACKEND_HOSTNAME}'/g" /root/docker-compose.yml
 fi
 
 
-if [ -n "$REVERSE_PROXY_BACKEND_PORT" ]; then
+if [ -n "$PUBLIC_BACKEND_PORT" ]; then
   docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
-    sed -i -E "s/DSPACE_REST_PORT: '(.*)'/DSPACE_REST_PORT: '${REVERSE_PROXY_BACKEND_PORT}'/g" /root/docker-compose.yml
+    sed -i -E "s/DSPACE_REST_PORT: '(.*)'/DSPACE_REST_PORT: '${PUBLIC_BACKEND_PORT}'/g" /root/docker-compose.yml
 else
   docker run --rm -v $(pwd)/source/dspace-angular-dspace-7.6/docker:/root intel/qat-crypto-base:qatsw-ubuntu \
     sed -i -E "s/DSPACE_REST_PORT: '(.*)'/DSPACE_REST_PORT: '${BACKEND_PORT}'/g" /root/docker-compose.yml

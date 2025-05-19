@@ -27,12 +27,12 @@ BACKEND_USES_SSL=
 BACKEND_ADDRESS_GIT=
 
 #################
-# PT_BR: Também defina estas opções se você estiver usando um proxy reverso
-# EN: Also set these options if you're using a reverse proxy
-REVERSE_PROXY_BACKEND_USES_SSL=
-REVERSE_PROXY_BACKEND_PROTOCOL=
-REVERSE_PROXY_BACKEND_HOSTNAME=
-REVERSE_PROXY_BACKEND_PORT=
+# PT_BR: Também defina essas opções se você está usando uma URL pública diferente da URL local (p.e. no caso de um proxy reverso)
+# EN: Also set these options if you're using a public URL other than your local URL (e.g. in case of a reverse proxy)
+PUBLIC_BACKEND_USES_SSL=
+PUBLIC_BACKEND_PROTOCOL=
+PUBLIC_BACKEND_HOSTNAME=
+PUBLIC_BACKEND_PORT=
 
 ############
 ## PT_BR: Configurações do Front-end (Interface gráfica do DSpace)
@@ -54,8 +54,8 @@ FRONTEND_PORT=
 FRONTEND_ADDRESS_GIT=
 
 #################
-# PT_BR: Também defina essas opções se você estiver usando um proxy reverso
-# EN: Also set these options if you're using a reverse proxy
-REVERSE_PROXY_FRONTEND_PROTOCOL=
-REVERSE_PROXY_FRONTEND_HOSTNAME=
-REVERSE_PROXY_FRONTEND_PORT=
+# PT_BR: Também defina essas opções se você está usando uma URL pública diferente da URL local (p.e. no caso de um proxy reverso)
+# EN: Also set these options if you're using a public URL other than your local URL (e.g. in case of a reverse proxy)
+PUBLIC_FRONTEND_PROTOCOL=
+PUBLIC_FRONTEND_HOSTNAME=
+PUBLIC_FRONTEND_PORT=
