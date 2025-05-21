@@ -9,33 +9,48 @@ REPOSITORY_DESCRIPTION="Repositório-Padrão para DSpace 7 do IBICT"
 ## Configurações do Backend (serviços do DSpace)
 ############
 
-# Informe se é http ou https
+# Protocolo usado para iniciar o servidor local do backend: "http" ou "https"
 BACKEND_PROTOCOL=http
 
-# Informe o endereço onde o serviço (backend) do DSpace irá rodar
-# Importante, este endereço precisa ser acessível pela interface gráfica.
+# Endereço (hostname ou IP) em que o servidor local do backend será iniciado
 BACKEND_HOSTNAME=192.169.5.126
 
-# Informe a porta onde o serviço (backend) do DSpace irá rodar
+# Porta usada para iniciar o servidor local do backend
 BACKEND_PORT=9080
 
-# Informe "true" caso o repositório use https, "false" caso contrário
+# Informe "true" se o servidor local backend for iniciado com https, ou "false" para http
 BACKEND_USES_SSL=false
+
+# Informe o protocolo da URL pública do backend
+PUBLIC_BACKEND_PROTOCOL=https
+
+# Informe o hostname da URL pública do backend
+PUBLIC_BACKEND_HOSTNAME=api-dspace.ibict.com
+
+# Informe a porta da URL pública do backend
+PUBLIC_BACKEND_PORT=443
 
 ############
 ## Configurações do FrontEnd (interface gráfica do DSpace)
 ############
 
-# Informe se a interface web será acessada via http ou https
+# Protocolo usado para iniciar o servidor local da interface web: "http" ou "https"
 FRONTEND_PROTOCOL=http
 
-# Informe o endereço da interface web
-# Importante: este será o endereço que o usuário irá utilizar para acessar o DSpace
+# Endereço (hostname ou IP) em que o servidor local da interface web será iniciado
 FRONTEND_HOSTNAME=192.169.5.126
 
-# Informe a porta da interface web
+# Porta usada para iniciar o servidor local da interface web
 FRONTEND_PORT=5000
 
-# Informe "true" se a interface web será acessada via https "false" caso o acesso seja via http
+# Informe "true" se o servidor local da interface web for iniciado com https, ou "false" para http
 FRONTEND_USES_SSL=false
 
+# Informe o protocolo da URL pública do frontend
+PUBLIC_FRONTEND_PROTOCOL=https
+
+# Informe o hostname da URL pública do frontend
+PUBLIC_FRONTEND_HOSTNAME=dspace.ibict.com
+
+# Informe a porta da URL pública do frontend
+PUBLIC_FRONTEND_PORT=443
