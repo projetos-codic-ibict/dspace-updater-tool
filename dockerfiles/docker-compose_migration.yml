@@ -17,8 +17,8 @@ services:
       - TZ=America/Sao_Paulo
     networks:
       - dspacenet
-  #    volumes:
-  #      -  ../../postgres-data:/var/lib/postgresql/data
+    volumes:
+      -  postgres_data:/var/lib/postgresql/data
 
   dspace7:
     container_name: dspace7
@@ -102,6 +102,7 @@ services:
 volumes:
   solr_data:
   m2:
+  postgres_data:
 
 
 networks:
