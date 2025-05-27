@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o xtrace
+
 {
 
   if ! [[ $1 ]]; then
@@ -46,12 +48,12 @@ if [[ "${BACKEND_ADDRESS_GIT}" ]]; then
   --------------------------------------
   \U0001F173
   --------------------------------------
-  \e[1mPT_BR\e[0m: Backend: Clonando o repositório GIT especificado como fonte para o DSpace 7.6
-  \e[1mEN\e[0m: Backend: Cloning the GIT repo specified as DSpace 7.6 source
+  \e[1mPT_BR\e[0m: Backend: Clonando o repositório GIT especificado como fonte para o DSpace 8.1
+  \e[1mEN\e[0m: Backend: Cloning the GIT repo specified as DSpace 8.1 source
   '
   {
     docker run --rm -e BACKEND_ADDRESS_GIT:${BACKEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git &&
-      git clone --depth 1 ${BACKEND_ADDRESS_GIT} DSpace-dspace-7.6
+      git clone --depth 1 ${BACKEND_ADDRESS_GIT} DSpace-dspace-8.1
   } >>./execution.log 2>&1
 else
 
@@ -59,17 +61,17 @@ else
 --------------------------------------
 \U0001F173
 --------------------------------------
-\e[1mPT_BR\e[0m Backend: Efetuando o download do fonte do DSpace 7.6 do GitHub do DSpace
-\e[1mEN\e[0m: Backend: Downloading the source of DSpace 7.6 from DSpace Github
+\e[1mPT_BR\e[0m Backend: Efetuando o download do fonte do DSpace 8.1 do GitHub do DSpace
+\e[1mEN\e[0m: Backend: Downloading the source of DSpace 8.1 from DSpace Github
 '
   {
     docker run --rm -v $(pwd):/unzip -w /unzip kubeless/unzip && \
-      curl https://github.com/DSpace/DSpace/archive/refs/tags/dspace-7.6.zip -o dspace-7.6.zip -L && \
-      unzip -q dspace-7.6.zip && \
+      curl https://github.com/DSpace/DSpace/archive/refs/tags/dspace-8.1.zip -o dspace-8.1.zip -L && \
+      unzip -q dspace-8.1.zip && \
       sleep 1 && \
-      rm dspace-7.6.zip && \
+      rm dspace-8.1.zip && \
       sleep 1 && \
-      rm -rf dspace-7.6
+      rm -rf dspace-8.1
   } >>./execution.log 2>&1
 fi
 
@@ -83,19 +85,19 @@ printf '
 
 {
   mkdir source || true >/dev/null 2>&1
-  mv DSpace-dspace-7.6 source
+  mv DSpace-dspace-8.1 source
 
-  cp ./dockerfiles/Dockerfile_backend source/DSpace-dspace-7.6/Dockerfile
-  cp ./dockerfiles/docker-compose_migration.yml source/DSpace-dspace-7.6/
-  cp ./dockerfiles/docker-compose_restart.yml source/DSpace-dspace-7.6/
+  cp ./dockerfiles/Dockerfile_backend source/DSpace-dspace-8.1/Dockerfile
+  cp ./dockerfiles/docker-compose_migration.yml source/DSpace-dspace-8.1/
+  cp ./dockerfiles/docker-compose_restart.yml source/DSpace-dspace-8.1/
 
   docker run --rm -v $(pwd)/source:/root -w /root intel/qat-crypto-base:qatsw-ubuntu \
-    sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-7.6/docker-compose_migration.yml
+    sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-8.1/docker-compose_migration.yml
   docker run --rm -v $(pwd)/source:/root -w /root intel/qat-crypto-base:qatsw-ubuntu \
-    sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-7.6/docker-compose_restart.yml
+    sed -i -E "s/published\: (.*) \#Port for tomcat/published\: ${BACKEND_PORT} \#Port for tomcat/g" /root/DSpace-dspace-8.1/docker-compose_restart.yml
 
-  docker run --rm -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.6/docker-compose_migration.yml
-  docker run --rm -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-7.6/docker-compose_restart.yml
+  docker run --rm -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-8.1/docker-compose_migration.yml
+  docker run --rm -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root intel/qat-crypto-base:qatsw-ubuntu sed -i -E "s/POSTGRES_PASSWORD=(.*) #Postgres password/POSTGRES_PASSWORD=${DSPACE_POSTGRES_PASSWORD} #Postgres password/g" /root/DSpace-dspace-8.1/docker-compose_restart.yml
 
   cp -r ./dockerfiles/docker/postgres ./source
 
@@ -108,20 +110,20 @@ printf '
   docker run --rm -e DSPACE_POSTGRES_PASSWORD:${DSPACE_POSTGRES_PASSWORD} -v $(pwd)/source:/root -w /root intel/qat-crypto-base:qatsw-ubuntu \
     sed -i -E "s/CREATE USER dspace WITH PASSWORD '(.*)'/CREATE USER dspace WITH PASSWORD '${DSPACE_POSTGRES_PASSWORD}'/g" /root/postgres/scripts/prepara-postgres.sh
 
-  echo "" >source/DSpace-dspace-7.6/dspace/config/local.cfg
-  cat ./local.cfg >source/DSpace-dspace-7.6/dspace/config/local.cfg
-  echo "db.password = ${DSPACE_POSTGRES_PASSWORD}" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
-  echo "db.url = jdbc:postgresql://dspace7db.dspacenet:5432/dspace" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
-  echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
+  echo "" >source/DSpace-dspace-8.1/dspace/config/local.cfg
+  cat ./local.cfg >source/DSpace-dspace-8.1/dspace/config/local.cfg
+  echo "db.password = ${DSPACE_POSTGRES_PASSWORD}" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
+  echo "db.url = jdbc:postgresql://dspace7db.dspacenetwork:5432/dspace" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
+  echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
 
   if [ -n "$REVERSE_PROXY_FRONTEND_PROTOCOL" ] || [ -n "$REVERSE_PROXY_FRONTEND_HOSTNAME" ] || [ -n "$REVERSE_PROXY_FRONTEND_PORT" ]; then
     if [ -n "$REVERSE_PROXY_FRONTEND_PORT" ]; then
-      echo "dspace.ui.url = ${REVERSE_PROXY_FRONTEND_PROTOCOL}://${REVERSE_PROXY_FRONTEND_HOSTNAME}:${REVERSE_PROXY_FRONTEND_PORT}" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
+      echo "dspace.ui.url = ${REVERSE_PROXY_FRONTEND_PROTOCOL}://${REVERSE_PROXY_FRONTEND_HOSTNAME}:${REVERSE_PROXY_FRONTEND_PORT}" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
     else
-      echo "dspace.ui.url = ${REVERSE_PROXY_FRONTEND_PROTOCOL}://${REVERSE_PROXY_FRONTEND_HOSTNAME}" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
+      echo "dspace.ui.url = ${REVERSE_PROXY_FRONTEND_PROTOCOL}://${REVERSE_PROXY_FRONTEND_HOSTNAME}" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
     fi
   else
-    echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >>source/DSpace-dspace-7.6/dspace/config/local.cfg
+    echo "dspace.ui.url = ${FRONTEND_PROTOCOL}://${FRONTEND_HOSTNAME}:${FRONTEND_PORT}" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
   fi
 } >>./execution.log 2>&1
 
@@ -147,14 +149,14 @@ printf '
 {
   if ! [[ $1 ]]; then
     rm -rf ./dspace-install-dir/config/spring
-    cp -r ./source/DSpace-dspace-7.6/dspace/config/spring ./dspace-install-dir/config/
+    cp -r ./source/DSpace-dspace-8.1/dspace/config/spring ./dspace-install-dir/config/
   fi
   # Maven
   mkdir ~/.m2 || true
-  docker run -v ~/.m2:/var/maven/.m2 -v "$(pwd)/source/DSpace-dspace-7.6":/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVen_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 mvn -q --no-transfer-progress -Duser.home=/var/maven clean package -P dspace-oai,\!dspace-sword,\!dspace-swordv2,\!dspace-rdf,\!dspace-iiif
+  docker run -v ~/.m2:/var/maven/.m2 -v "$(pwd)/source/DSpace-dspace-8.1":/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVEN_CONFIG=/var/maven/.m2 maven:3.9.9-eclipse-temurin-17 mvn -q --no-transfer-progress -Duser.home=/var/maven clean package -P dspace-oai,\!dspace-sword,\!dspace-swordv2,\!dspace-rdf,\!dspace-iiif
 
   # Ant
-  docker run -v ~/.m2:/var/maven/.m2 -v $(pwd)/dspace-install-dir:/dspace -v $(pwd)/source/DSpace-dspace-7.6:/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVen_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 /bin/bash -c "wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz && tar -xvzf apache-ant-1.10.12-bin.tar.gz && cd dspace/target/dspace-installer && ../../../apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps && cd ../../../ && rm -rf apache-ant-*"
+  docker run -v ~/.m2:/var/maven/.m2 -v $(pwd)/dspace-install-dir:/dspace -v $(pwd)/source/DSpace-dspace-8.1:/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVEN_CONFIG=/var/maven/.m2 maven:3.9.9-eclipse-temurin-17 /bin/bash -c "wget --no-verbose https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz && tar -xzf apache-ant-1.10.12-bin.tar.gz && cd dspace/target/dspace-installer && ../../../apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps && cd ../../../ && rm -rf apache-ant-*"
 
   if  [[ $1 ]]; then
     ls -lsah $DSPACE_INSTALL_DIR/config
@@ -173,9 +175,9 @@ printf '
 
 {
   if ! [[ $1 ]]; then
-    docker compose -f source/DSpace-dspace-7.6/docker-compose_migration.yml up --build -d
+    docker compose -f source/DSpace-dspace-8.1/docker-compose_migration.yml up --build -d
   else
-    docker compose -f source/DSpace-dspace-7.6/docker-compose_restart.yml up --build -d
+    docker compose -f source/DSpace-dspace-8.1/docker-compose_restart.yml up --build -d
   fi
 
   sleep 10
@@ -195,7 +197,7 @@ if ! [[ $1 ]]; then
   {
     for file in ./tmp/solr_*; do
       echo "Sending file ${file##*/} to Solr..."
-      docker run --rm --network="dspacenet" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
+      docker run --rm --network="dspacenetwork" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
     done
 
     sudo rm -rf ./tmp/*

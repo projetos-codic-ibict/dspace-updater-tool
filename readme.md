@@ -9,7 +9,7 @@ Autor: Márcio Gurgel (marcio.rga@gmail.com)
 # EN (Portuguse bellow)
 
 # About
-This tool upgrades any DSpace 4, 5 or 6 to the latest DSpace 7.6, with (much) less need of human intervention.
+This tool upgrades any DSpace 4, 5 or 6 to the latest DSpace 8.1, with (much) less need of human intervention.
 
 To use this tool, all you need is: a docker environment, a copy of "dspace-dir" form the old DSpace, a postgres dump from old DSpace;
 
@@ -62,8 +62,8 @@ To use this tool, all you need is: a docker environment, a copy of "dspace-dir" 
 ### Making changes in DSpace 7
 
 ### Front-end (angular)
-- If you've set a git repo for your angular interface, this tool will `pull` the new code and re-compile the source in `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-7.6`;
-- If you haven't set a git repo for your angular interface this tool will just recompile the source in  `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-7.6`;
+- If you've set a git repo for your angular interface, this tool will `pull` the new code and re-compile the source in `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-8.1`;
+- If you haven't set a git repo for your angular interface this tool will just recompile the source in  `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-8.1`;
 - Tô recompile your angular interface, just run  `./restart-frontend.sh`
 
 ### Backend
@@ -91,7 +91,7 @@ All logs will by written in: `[DSPACE_UPGRADE_TOOL]/execution.log`
 # PT_BR
 
 # Sobre
-Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 7.6 com pouca necessidade de intervenção humana.
+Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versões 4, 5 ou 6 para a versão 8.1 com pouca necessidade de intervenção humana.
 
 ## O que a ferramenta faz?
 
@@ -127,7 +127,7 @@ Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versõe
 - Copie o diretório de instalação do DSpace antigo para o servidor onde o DSpace 7 irá rodar. Os diretórios obrigatórios são: config, assetstore, webapps e solr.
 - Copie o arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties.EXAMPLE` para [DSPACE_UPGRADE_TOOL]/upgrade-variables.properties.
 - Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties` .
-  - Caso você já possua um repositório GIT com seu DSpace 7.6, informe o endereço neste arquivo, a ferramenta irá fazer o clone ao invés de fazer download do zip do repositório do DSpace original.  
+  - Caso você já possua um repositório GIT com seu DSpace 8.1, informe o endereço neste arquivo, a ferramenta irá fazer o clone ao invés de fazer download do zip do repositório do DSpace original.  
 - Adicione configurações adicionais no arquivo `local.cfg`, como informações para envio de e-mail, etc.
 - Com o usuário root, rode o script `upgrade-to-dspace7.sh`
   - Caso ocorra algum problema com o preenchimento das variáveis, efetue a correção e rode o script novamente.
@@ -140,8 +140,8 @@ Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versõe
 ## Procedimento para aplicar mudanças no DSpace 7
 
 ### Front-end (angular)
-- Caso você tenha especificado um repositório git para sua interface angular, no arquivo `upgrade-variables.properties` esta ferramenta fará o `pull` do novo código e recompilar o código-fonte localizado em:  `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-7.6`;
-- Caso você não tenha informado um repositório Git, esta ferramenta irá apenar recompilar o código presente em: `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-7.6`;
+- Caso você tenha especificado um repositório git para sua interface angular, no arquivo `upgrade-variables.properties` esta ferramenta fará o `pull` do novo código e recompilar o código-fonte localizado em:  `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-8.1`;
+- Caso você não tenha informado um repositório Git, esta ferramenta irá apenar recompilar o código presente em: `[DSPACE_UPGRADE_TOOL]/source/dspace-angular-dspace-8.1`;
 - Para recompilar a interface, execute:  `./restart-frontend.sh`
 
 ### Backend

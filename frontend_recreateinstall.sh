@@ -12,9 +12,9 @@ Your root password will be requested.
 '
 
 {
-rm dspace-7.6.zip || true > /dev/null 2>&1 > /dev/null
+rm dspace-8.1.zip || true > /dev/null 2>&1 > /dev/null
 sleep 1
-rm -rf ./source/dspace-angular-dspace-7.6
+rm -rf ./source/dspace-angular-dspace-8.1
 
 docker rm -f dspace7-angular || true > /dev/null 2>&1 > /dev/null
 docker rmi -f docker-dspace7-angular || true > /dev/null 2>&1 > /dev/null

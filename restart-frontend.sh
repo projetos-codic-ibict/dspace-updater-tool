@@ -20,7 +20,7 @@ if [[ "${FRONTEND_ADDRESS_GIT}" ]]; then
   \e[1mEN\e[0m: Backend: The angular module is associated with a git repo, updating the source code
   '
   {
-    cd source/dspace-angular-dspace-7.6
+    cd source/dspace-angular-dspace-8.1
     docker run --rm -e FRONTEND_ADDRESS_GIT:${FRONTEND_ADDRESS_GIT} -v $(pwd):/git -w /git alpine/git &&
       git pull ${FRONTEND_ADDRESS_GIT}
       cd ../..
@@ -35,5 +35,5 @@ printf '
 \e[1mEN\e[0m: Backend: Re-compiling the angular mudule
 '
 {
-docker compose -f source/dspace-angular-dspace-7.6/docker/docker-compose.yml up --build -d
+docker compose -f source/dspace-angular-dspace-8.1/docker/docker-compose.yml up --build -d
 } >>./execution.log 2>&1

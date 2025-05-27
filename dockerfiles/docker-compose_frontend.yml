@@ -11,7 +11,7 @@
 # for example via 'docker-compose-rest.yml'
 version: '3.7'
 networks:
-  dspacenet:
+  dspacenetwork:
 services:
   dspace7-angular:
     container_name: dspace7-angular
@@ -30,7 +30,7 @@ services:
       context: ..
       dockerfile: Dockerfile
     networks:
-      dspacenet:
+      dspacenetwork:
     ports:
     - published: 4000
       target: 4000
