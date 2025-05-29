@@ -21,12 +21,13 @@ Your root password will be requested.
   rm dspace-8.1.zip || true >/dev/null 2>&1
 
   docker rm -f dspace7 || true >/dev/null 2>&1
-  docker rmi -f dspace-dspace-76-dspace7 || true >/dev/null 2>&1
+  docker rmi -f dspace-dspace-81-dspace7 || true >/dev/null 2>&1
 
   docker rm -f dspace7db || true >/dev/null 2>&1
   docker rm -f dspace7solr || true >/dev/null 2>&1
-  docker rmi -f ibict/postgresdspace7 || true >/dev/null 2>&1
+  docker rmi -f ibict/postgresdspace8 || true >/dev/null 2>&1
 
-  docker volume rm dspace-dspace-75_solr_data || true >/dev/null 2>&1
+  docker volume rm dspace-dspace-81_solr_data || true >/dev/null 2>&1
+  docker volume rm dspace-dspace-81_postgres_data || true >/dev/null 2>&1
 } >> execution.log 2>&1
 

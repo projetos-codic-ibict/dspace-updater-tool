@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk17
+FROM tomcat:10-jdk17-temurin-noble
 ENV TZ="America/Sao_Paulo"
 
 # Expose Tomcat port and AJP port

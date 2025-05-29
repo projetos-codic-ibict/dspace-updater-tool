@@ -153,7 +153,7 @@ printf '
   fi
   # Maven
   mkdir ~/.m2 || true
-  docker run -v ~/.m2:/var/maven/.m2 -v "$(pwd)/source/DSpace-dspace-8.1":/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVEN_CONFIG=/var/maven/.m2 maven:3.9.9-eclipse-temurin-17 mvn -q --no-transfer-progress -Duser.home=/var/maven clean package -P dspace-oai,\!dspace-sword,\!dspace-swordv2,\!dspace-rdf,\!dspace-iiif
+  docker run -v ~/.m2:/var/maven/.m2 -v "$(pwd)/source/DSpace-dspace-8.1":/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVEN_CONFIG=/var/maven/.m2 maven:3.9.9-eclipse-temurin-17 mvn -Duser.home=/var/maven clean package -P dspace-oai,\!dspace-sword,\!dspace-swordv2,\!dspace-rdf,\!dspace-iiif
 
   # Ant
   docker run -v ~/.m2:/var/maven/.m2 -v $(pwd)/dspace-install-dir:/dspace -v $(pwd)/source/DSpace-dspace-8.1:/tmp/dspacebuild -w /tmp/dspacebuild -ti --rm -e MAVEN_CONFIG=/var/maven/.m2 maven:3.9.9-eclipse-temurin-17 /bin/bash -c "wget --no-verbose https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz && tar -xzf apache-ant-1.10.12-bin.tar.gz && cd dspace/target/dspace-installer && ../../../apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps && cd ../../../ && rm -rf apache-ant-*"
