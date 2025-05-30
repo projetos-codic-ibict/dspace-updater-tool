@@ -13,8 +13,8 @@ version: '3.7'
 networks:
   dspacenetwork:
 services:
-  dspace7-angular:
-    container_name: dspace7-angular
+  dspace8-angular:
+    container_name: dspace8-angular
     environment:
       DSPACE_UI_SSL: 'false'
       DSPACE_UI_HOST: '192.169.5.126'

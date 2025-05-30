@@ -113,7 +113,7 @@ printf '
   echo "" >source/DSpace-dspace-8.1/dspace/config/local.cfg
   cat ./local.cfg >source/DSpace-dspace-8.1/dspace/config/local.cfg
   echo "db.password = ${DSPACE_POSTGRES_PASSWORD}" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
-  echo "db.url = jdbc:postgresql://dspace7db.dspacenetwork:5432/dspace" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
+  echo "db.url = jdbc:postgresql://dspace8db.dspacenetwork:5432/dspace" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
   echo "dspace.server.url = ${BACKEND_PROTOCOL}://${BACKEND_HOSTNAME}:${BACKEND_PORT}/server" >>source/DSpace-dspace-8.1/dspace/config/local.cfg
 
   if [ -n "$REVERSE_PROXY_FRONTEND_PROTOCOL" ] || [ -n "$REVERSE_PROXY_FRONTEND_HOSTNAME" ] || [ -n "$REVERSE_PROXY_FRONTEND_PORT" ]; then
@@ -197,7 +197,7 @@ if ! [[ $1 ]]; then
   {
     for file in ./tmp/solr_*; do
       echo "Sending file ${file##*/} to Solr..."
-      docker run --rm --network="dspacenetwork" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace7solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
+      docker run --rm --network="dspacenetwork" -e file=${file} -v $(pwd):/unzip -w /unzip kubeless/unzip curl 'http://dspace8solr:8983/solr/statistics/update?commit=true&commitWithin=1000' --data-binary @"${file}" -H 'Content-type:application/csv'
     done
 
     sudo rm -rf ./tmp/*

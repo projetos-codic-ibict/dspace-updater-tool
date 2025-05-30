@@ -16,8 +16,8 @@ rm dspace-8.1.zip || true > /dev/null 2>&1 > /dev/null
 sleep 1
 rm -rf ./source/dspace-angular-dspace-8.1
 
-docker rm -f dspace7-angular || true > /dev/null 2>&1 > /dev/null
-docker rmi -f docker-dspace7-angular || true > /dev/null 2>&1 > /dev/null
+docker rm -f dspace8-angular || true > /dev/null 2>&1 > /dev/null
+docker rmi -f docker-dspace8-angular || true > /dev/null 2>&1 > /dev/null
 } >> ./execution.log 2>&1
 
 source ./frontend_build.sh default-ibict

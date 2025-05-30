@@ -9,7 +9,7 @@ mkdir -p ./tmp
 
 docker pull tomcat:8.5.89-jdk8-temurin-jammy
 docker rm -f tomcatsolr || true
-docker rm -f dspace7solr || true
+docker rm -f dspace8solr || true
 docker rm -f downloadsolrdata || true
 
 

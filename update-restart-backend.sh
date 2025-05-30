@@ -12,8 +12,8 @@ docker run -v ~/.m2:/var/maven/.m2 -v "$(pwd)/source/DSpace-dspace-7.6":/tmp/dsp
 echo "Executando ant..."
 docker run -v ~/.m2:/var/maven/.m2 -v $(pwd)/dspace-install-dir:/dspace -v $(pwd)/source/DSpace-dspace-7.6:/tmp/dspacebuild -w /tmp/dspacebuild --rm -e MAVen_CONFIG=/var/maven/.m2 maven:3.8.6-openjdk-11 /bin/bash -c "wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz && tar -xvzf apache-ant-1.10.12-bin.tar.gz && cd dspace/target/dspace-installer && ../../../apache-ant-1.10.12/bin/ant init_installation update_configs update_code update_webapps && cd ../../../ && rm -rf apache-ant-*"
 
-echo "Removendo container dspace7"
-docker rm -f dspace7 || true > /dev/null 2>&1
+echo "Removendo container dspace8"
+docker rm -f dspace8 || true > /dev/null 2>&1
 
-echo "Iniciando container dspace7"
+echo "Iniciando container dspace8"
 docker compose -f source/DSpace-dspace-7.6/docker-compose_restart.yml up --build -d

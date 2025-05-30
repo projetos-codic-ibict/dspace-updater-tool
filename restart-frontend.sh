@@ -1,9 +1,9 @@
 #!/bin/bash
 
 {
-docker rm -f dspace7-angular
+docker rm -f dspace8-angular
 docker rm -f dspace-angular
-docker rmi -f docker_dspace7-angular
+docker rmi -f docker_dspace8-angular
 
 source ./upgrade-variables.properties
 } >>./execution.log 2>&1

@@ -150,7 +150,7 @@ printf '
 
 
 
-timeout 1000s grep -q 'Compiled successfully.' <(docker logs dspace7-angular --follow)
+timeout 1000s grep -q 'Compiled successfully.' <(docker logs dspace8-angular --follow)
 
 printf '
 --------------------------------------
