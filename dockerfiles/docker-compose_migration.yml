@@ -45,15 +45,8 @@ services:
       - '-c'
       - |
         /dspace/bin/dspace database migrate ignored
-        mkdir /dspace/config/temp
-        cp /dspace/config/item-submission.xml /dspace/config/temp
-        cp /dspace/config/input-forms.xml /dspace/config/temp
         rm /dspace/config/spring/api/bte.xml
         rm /dspace/config/GeoLiteCity.dat
-        /dspace/bin/dspace submission-forms-migrate -s /dspace/config/temp/item-submission.xml -f /dspace/config/temp/input-forms.xml
-        mv /dspace/config/item-submission.xml.migrated /dspace/config/item-submission.xml
-        mv /dspace/config/submission-forms.xml.migrated /dspace/config/submission-forms.xml
-        sed -i 's/<step id="collection"\/>//g' /dspace/config/item-submission.xml
         ln -s /dspace/webapps/server /usr/local/tomcat/webapps/
         catalina.sh run
 
