@@ -27,7 +27,7 @@ Your root password will be requested.
   docker rm -f dspace7solr || true >/dev/null 2>&1
   docker rmi -f ibict/postgresdspace7 || true >/dev/null 2>&1
 
-  docker volume rm dspace-dspace-75_solr_data || true >/dev/null 2>&1
-  docker volume rm dspace-dspace-75_postgres_data || true >/dev/null 2>&1
+  docker volume rm dspace-dspace-76_solr_data || true >/dev/null 2>&1
+  docker volume rm dspace-dspace-76_postgres_data || true >/dev/null 2>&1
 } >> execution.log 2>&1
 
