@@ -13,9 +13,9 @@ services:
       - POSTGRES_PASSWORD=xxxxx #Postgres password
       - TZ=America/Sao_Paulo
     networks:
-      - dspacenetwork
-    volumes:
-      -  postgres_data:/var/lib/postgresql/data
+      - dspacenet
+    # volumes:
+    #   -  postgres_data:/var/lib/postgresql/data
 
   dspace8:
     container_name: dspace8
@@ -99,7 +99,7 @@ services:
 volumes:
   solr_data:
   m2:
-  postgres_data:
+  # postgres_data:
 
 
 networks:

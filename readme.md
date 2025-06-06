@@ -108,13 +108,14 @@ Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versõe
 
 ### Para instalar um novo DSpace
 - Instale os comandos "docker" e "docker compose" no seu servidor;
-- Copie e cole o arquivo `[DSPACE_UPGRADE_TOOL]/ibict_upgrade-variables.properties.EXAMPLE` para `[DSPACE_UPGRADE_TOOL]/ibict_upgrade-variables.properties`;
-- Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/ibict_upgrade-variables.properties` .
+- Copie e cole o arquivo `[DSPACE_UPGRADE_TOOL]/install-variables.properties.EXAMPLE` para `[DSPACE_UPGRADE_TOOL]/install-variables.properties`;
+- Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/install-variables.properties` .
+- Copie o arquivo `[DSPACE_UPGRADE_TOOL]/local.cfg.EXAMPLE` para `[DSPACE_UPGRADE_TOOL]/local.cfg`.
 - Adicione configurações adicionais no arquivo `local.cfg`, como informações para envio de e-mail, etc.
 - Rode o script `./create-dspace8.sh`
   - Caso ocorra algum problema com o preenchimento das variáveis, efetue a correção e rode o script novamente.
 - Aguarde o processamento, o tempo de processamento irá depender do desempenho do servidor, ao final você será soliciado a criar um novo usuário;
-- Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `[DSPACE_UPGRADE_TOOL]/ibict_upgrade-variables.properties`.
+- Acesse a interface do DSpace utilizando os endereços inseridos no arquivo `[DSPACE_UPGRADE_TOOL]/install-variables.properties`.
 
 
 
@@ -128,6 +129,7 @@ Esta ferramenta instala um novo DSpace 7 ou atualiza qualquer DSpace nas versõe
 - Copie o arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties.EXAMPLE` para [DSPACE_UPGRADE_TOOL]/upgrade-variables.properties.
 - Preencha o arquivo `[DSPACE_UPGRADE_TOOL]/upgrade-variables.properties` .
   - Caso você já possua um repositório GIT com seu DSpace 8.1, informe o endereço neste arquivo, a ferramenta irá fazer o clone ao invés de fazer download do zip do repositório do DSpace original.  
+- Copie o arquivo `[DSPACE_UPGRADE_TOOL]/local.cfg.EXAMPLE` para `[DSPACE_UPGRADE_TOOL]/local.cfg`.
 - Adicione configurações adicionais no arquivo `local.cfg`, como informações para envio de e-mail, etc.
 - Com o usuário root, rode o script `upgrade-to-dspace8.sh`
   - Caso ocorra algum problema com o preenchimento das variáveis, efetue a correção e rode o script novamente.
