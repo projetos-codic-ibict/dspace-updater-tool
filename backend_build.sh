@@ -204,18 +204,18 @@ main() {
   generate_postgres_password >>./execution.log 2>&1
   copy_dspace_installation_files >>./execution.log 2>&1
   handle_backend_source "$1" >>./execution.log 2>&1
-#  fill_deployment_variables "$1" >>./execution.log 2>&1
-#
-#  if ! [[ $1 ]]; then
-#    backup_solr_statistics
-#  fi
-#
-#  compile_dspace "$1" >>./execution.log 2>&1
-#  initialize_dspace_server "$1" >>./execution.log 2>&1
-#
-#  if ! [[ $1 ]]; then
-#    import_solr_backup >>./execution.log 2>&1
-#  fi
+  fill_deployment_variables "$1" >>./execution.log 2>&1
+
+  if ! [[ $1 ]]; then
+    backup_solr_statistics
+  fi
+
+  compile_dspace "$1" >>./execution.log 2>&1
+  initialize_dspace_server "$1" >>./execution.log 2>&1
+
+  if ! [[ $1 ]]; then
+    import_solr_backup >>./execution.log 2>&1
+  fi
 
   printf '
 --------------------------------------
