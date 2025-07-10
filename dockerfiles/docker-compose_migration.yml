@@ -13,7 +13,7 @@ services:
       - POSTGRES_PASSWORD=xxxxx #Postgres password
       - TZ=America/Sao_Paulo
     networks:
-      - dspacenet
+      - dspacenetwork
     # volumes:
     #   -  postgres_data:/var/lib/postgresql/data
 
